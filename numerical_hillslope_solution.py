@@ -8,9 +8,9 @@ Created on Thu Aug 23 14:14:50 2018
 import matplotlib.pyplot as plt
 import numpy as np
 #
-W_0 = 2.5*np.power(10.0,-7)
+W_0 = 1*np.power(10.0,-4)
 #
-gamma = 1*np.power(10.0,9)
+gamma = 0.5
 #Uplift Rate (m)
 U = 0
 #Density of soil (kg/m^3)
@@ -18,7 +18,7 @@ rho = 1000
 #Diffusivity (m/yr)
 k = 0.012
 #Time
-t = 10
+t = 1000
 #Initialise a hillslope
 width = np.ones(50)
 length = np.arange(0,50,1)
@@ -41,8 +41,7 @@ count = 0
 #print area
 for i in range (0,t):
     for j in range (1,50):
-        flux[j] = -rho*k*width[j-1]*depth[j-1]*(((elevation[j-1]-elevation[j])/(length[j-1]-length[j])))
-        
+        flux[j] = -rho*k*width[j-1]*depth[j-1]*((elevation[j-1]-elevation[j])/(length[j-1]-length[j]))
         #Convert the flux to a depth
         d_depth[j] = flux[j]/rho/k/width[j-1] 
         
@@ -59,9 +58,9 @@ for i in range (0,t):
         depth[j-1] = n_depth[j-1]
         depth[j] = n_depth[j]
     #Factor in SOil production
-        s[j-1] = W_0*np.exp(-depth[j-1]*gamma)
-        print depth[j-1]
-        print s[j-1]
+        s[j-1] = W_0*np.exp(-depth[j-1]/gamma)
+        #print depth[j-1]
+        #print s[j-1]
         depth [j-1] = depth[j-1]+s[j-1]
     #print depth
     if count == 100:
@@ -70,7 +69,7 @@ for i in range (0,t):
         count = 0
         
     else: 
-        print count
+        #print count
         count = count+1   
 
 #print depth_print
