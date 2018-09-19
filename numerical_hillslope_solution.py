@@ -14,10 +14,11 @@ gamma = 0.5
 U = 0
 #Density of soil (kg/m^3)
 rho = 1000
-#Diffusivity (m/yr)
-k = 0.012
+#Sediment transport coefficient (diffusivity?) (m/yr) in the simple linear flux law
+k_1 = 0.005
+k_2 = 0.012
 #Time of Model (yr)
-t = 1000
+t = 2
 #Number of nodes (for simplicity each node represents a 1m interval)
 nodes = 50
 #Elevation of top and bottom of hillslope (m)
@@ -27,11 +28,18 @@ z_2 = 100
 d_z = float(z_1-z_2)/nodes 
 ###Initialise a hillslope
 #Sets the widths as 1m
-width = np.ones(nodes)
+width = np.arange(0,nodes,dtype=float)
+width.fill(0.01)
 #Creates a length of x nodes
 length = np.arange(0,nodes,1)
+
+######2 options for the depths
 #Sets the inital starting depths as betewen 0 and 1m
-depth = np.random.rand(nodes,1.0)
+#depth = np.random.rand(nodes,1.0)
+#Sets all depths to a fixed value
+depth = np.arange(0,nodes,dtype=float)
+depth.fill(0.5)
+
 #Used in the loops for getting new depths
 d_depth = np.zeros_like(depth,dtype=float)
 n_depth = np.zeros_like(depth,dtype=float)
@@ -41,6 +49,10 @@ set_elevation = np.arange(z_2,z_1,d_z)
 elevation = set_elevation[::-1]
 #Set up an array to be populated with fluxes
 flux = np.arange(0,nodes,1.0)
+#Linear sediment flux
+q_s = np.arange(0,nodes,1.0)
+#Slope dependent linear sediment flux
+q_s_s = np.arange(0,nodes,1.0)
 #Set up array to be filled with soil production rates 
 s = np.zeros_like(depth)
 #Set up an array to append values to
@@ -58,10 +70,16 @@ count = 0
 for i in range (0,t):
     for j in range (1,50):
         #Get the flux using a simple linear sediment flux law
-        flux[j] = -rho*k*width[j-1]*depth[j-1]*((elevation[j-1]-elevation[j])/(length[j-1]-length[j]))
+        flux[j] = -rho*k_2*width[j-1]*depth[j-1]*((elevation[j-1]-elevation[j])/(length[j-1]-length[j]))
         #Convert the flux to a depth
-        d_depth[j] = flux[j]/rho/k/width[j-1] 
-        
+        d_depth[j] = flux[j]/rho/d_z/width[j-1] 
+        #Calculate the other fluxes
+        q_s[j] = -k_1*((elevation[j-1]-elevation[j])/(length[j-1]-length[j]))
+        q_s_s[j] = -k_2*depth[j-1]*np.cos((elevation[j-1]-elevation[j])/np.sqrt((elevation[j-1]-elevation[j])**2+(length[j-1]-length[j])**2))*((elevation[j-1]-elevation[j])/(length[j-1]-length[j]))
+        #Compare fluxes:
+        print 'model flux',flux[j]/rho/width[j-1]
+        print 'linear flux',q_s[j]
+        print 'depth-slope flux',q_s_s[j]
         #Set the depth so it can't de negative (this shouldn't happen if the code is working properly)
         if d_depth[j] <=0:
             d_depth[j] = 0
