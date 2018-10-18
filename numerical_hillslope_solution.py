@@ -14,11 +14,11 @@ gamma = 0.5
 U = 0
 #Density of soil (kg/m^3)
 rho = 1000
-#Sediment transport coefficient (diffusivity?) (m/yr) in the simple linear flux law
+#Sediment transport coefficient (diffusivity?) (m/yr) in the simple linear flux law values taken from (Roering 2008)
 k_1 = 0.005
 k_2 = 0.012
 #Time of Model (yr)
-t = 2
+t = 100
 #Number of nodes (for simplicity each node represents a 1m interval)
 nodes = 50
 #Elevation of top and bottom of hillslope (m)
