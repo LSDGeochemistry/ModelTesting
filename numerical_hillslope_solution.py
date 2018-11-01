@@ -18,7 +18,7 @@ rho = 1000
 k_1 = 0.005
 k_2 = 0.012
 #Time of Model (yr)
-t = 100
+t = 5000
 #Number of nodes (for simplicity each node represents a 1m interval)
 nodes = 50
 #Elevation of top and bottom of hillslope (m)
@@ -29,7 +29,7 @@ d_z = float(z_1-z_2)/nodes
 ###Initialise a hillslope
 #Sets the widths as 1m
 width = np.arange(0,nodes,dtype=float)
-width.fill(0.01)
+width.fill(0.1)
 #Creates a length of x nodes
 length = np.arange(0,nodes,1)
 
@@ -77,9 +77,9 @@ for i in range (0,t):
         q_s[j] = -k_1*((elevation[j-1]-elevation[j])/(length[j-1]-length[j]))
         q_s_s[j] = -k_2*depth[j-1]*np.cos((elevation[j-1]-elevation[j])/np.sqrt((elevation[j-1]-elevation[j])**2+(length[j-1]-length[j])**2))*((elevation[j-1]-elevation[j])/(length[j-1]-length[j]))
         #Compare fluxes:
-        print 'model flux',flux[j]/rho/width[j-1]
-        print 'linear flux',q_s[j]
-        print 'depth-slope flux',q_s_s[j]
+#        print 'model flux',flux[j]/rho/width[j-1]
+#        print 'linear flux',q_s[j]
+#        print 'depth-slope flux',q_s_s[j]
         #Set the depth so it can't de negative (this shouldn't happen if the code is working properly)
         if d_depth[j] <=0:
             d_depth[j] = 0

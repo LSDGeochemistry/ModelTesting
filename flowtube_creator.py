@@ -15,9 +15,12 @@ Created on Mon Sep 24 12:48:31 2018
 import numpy as np
 import richdem as rd
 
+pomd = rd.loadGdal('L:/feather_river_mixing_paper/dem/pomd_out.tif')
 
 ###Input the parameters
 #Gridded data e.g.raster file
+pomd = rd.loadGdal('L:/feather_river_mixing_paper/dem/pomd_out.tif')
+
 #Depth data with x,y,z locations of pits along with soil depth, this must be in the same format as the gridded data and from this intermediuate pits can be calculated
 
 
