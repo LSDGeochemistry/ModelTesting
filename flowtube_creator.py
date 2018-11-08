@@ -14,42 +14,34 @@ Created on Mon Sep 24 12:48:31 2018
 #Elevation of nodes (meas elev)
 import numpy as np
 import richdem as rd
-import rasterio as rio
+from matplotlib import pyplot as plt
 
 ###Input the parameters
 #Gridded data e.g.raster file
 #Load the data and convert it to an array for RichDEM
 fname = 'L:/feather_river_mixing_paper/dem/pomd_out.tif'
 # Loading the raster with rasterio
-this_raster = rio.open(fname)
-
-# Initialising a dictionary containing the raster info for output
-out = {}
-gt = this_raster.res
-out['res'] = gt[0]
-out["ncols"] = this_raster.width+1
-out["nrows"] = this_raster.height+1
-out["x_min"] = this_raster.bounds[0]-out['res']
-out["y_min"] = this_raster.bounds[1]-out['res']
-out["x_max"] = this_raster.bounds[2]+out['res']
-out["y_max"] = this_raster.bounds[3]+out['res']
-out["extent"] = [out["x_min"],out["x_max"],out["y_min"],out["y_max"]]
-out["array"] = this_raster.read(1)# rd.rdarray(np.pad(this_raster.read(1).astype(np.float32), 1, 'constant',constant_values = -9999), no_data = -9999.)
-out['nodata'] = this_raster.nodatavals
-# This bit is to adapt the array to richdem
-pomd = rd.rdarray(out, no_data=out['nodata'])
-out["array"].geotransform = (this_raster.transform[2],this_raster.transform[0],this_raster.transform[1],this_raster.transform[5],this_raster.transform[3],this_raster.transform[4])
-out['crs'] = this_raster.crs['init']
 
 
+raster = rd.LoadGDAL(fname)
 
-print ('done')
+rasterfig = rd.rdShow(raster, ignore_colours=[0], axes=False, cmap='gist_earth', figsize=(8,5.5))
 
-pomd = rd.rdarray(out, no_data=out['nodata'])
+raster_filled = rd.FillDepressions(raster, epsilon=True, in_place=False)
 
-pomdfig = rd.rdShow(pomd, ignore_colours=[0], axes=False, cmap='jet', figsize=(8,5.5))
-#pomd_filled = rd.FillDepressions(pomd, in_place=False)
-#pomdfig_filled = rd.rdShow(pomd_filled, ignore_colours=[0], axes=False, cmap='jet', vmin=pomdfig['vmin'], vmax=pomdfig['vmax'], figsize=(8,5.5))
+rasterfig_filled = rd.rdShow(raster_filled, ignore_colours=[0], axes=False, cmap='gist_earth', vmin=rasterfig['vmin'], vmax=rasterfig['vmax'], figsize=(8,5.5))
+
+accum_d8 = rd.FlowAccumulation(raster_filled, method='D8')
+d8_fig = rd.rdShow(accum_d8, figsize=(8,5.5), axes=False, cmap='jet')
+
+slope=rd.TerrainAttribute(raster_filled, attrib='slope_riserun')
+rd.rdShow(slope, axes=False, cmap='jet', figsize=(8,5.5))
+
+profile_curvature = rd.TerrainAttribute(raster_filled, attrib='curvature')
+rd.rdShow(profile_curvature, axes=False, cmap='jet', figsize=(8,5.5))
+#Check differences between raster
+#raster_diff = raster_filled-raster
+#rasterfig_diff = rd.rdShow(raster_diff, ignore_colours=[0], axes=False, cmap='jet', figsize=(8,5.5))
 
 #Depth data with x,y,z locations of pits along with soil depth, this must be in the same format as the gridded data and from this intermediuate pits can be calculated
 
