@@ -42,7 +42,7 @@ rd.rdShow(profile_curvature, axes=False, cmap='jet', figsize=(8,5.5))
 #Check differences between raster
 #raster_diff = raster_filled-raster
 #rasterfig_diff = rd.rdShow(raster_diff, ignore_colours=[0], axes=False, cmap='jet', figsize=(8,5.5))
-
+#s
 #Depth data with x,y,z locations of pits along with soil depth, this must be in the same format as the gridded data and from this intermediuate pits can be calculated
 
 
