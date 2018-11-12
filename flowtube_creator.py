@@ -39,6 +39,33 @@ rd.rdShow(slope, axes=False, cmap='jet', figsize=(8,5.5))
 
 profile_curvature = rd.TerrainAttribute(raster_filled, attrib='curvature')
 rd.rdShow(profile_curvature, axes=False, cmap='jet', figsize=(8,5.5))
+
+
+print (raster)
+N=np.size(raster,1)
+gradient = np.empty((8,N-2,N-2),dtype=np.float)
+code = np.empty(8,dtype=np.int)
+for k in range(8):
+    theta = -k*np.pi/4
+    code[k] = 2**k
+    j, i = np.int(1.5*np.cos(theta)),-np.int(1.5*np.sin(theta))
+    d = np.linalg.norm([i,j])
+    gradient[k] = (raster[1+i: N-1+i,1+j: N-1+j]-raster[1: N-1,1: N-1])/d
+direction = (-gradient).argmax(axis=0)
+result = code.take(direction)
+
+####Work out what ius going on here
+
+flow_idx_dict = {32: 0,
+                     64: 1,
+                     128: 2,
+                     16: 3,
+                     1: 5,
+                     8: 6,
+                     4: 7,
+                     2: 8}
+results = flow_idx_dict[idx]
+print (results)
 #Check differences between raster
 #raster_diff = raster_filled-raster
 #rasterfig_diff = rd.rdShow(raster_diff, ignore_colours=[0], axes=False, cmap='jet', figsize=(8,5.5))
