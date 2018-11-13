@@ -48,17 +48,18 @@ print (raster)
 temp = np.flip(raster,0)
 raster= temp
 print(raster)
-N=np.size(raster,1)
-gradient = np.empty((8,N-2,N-2),dtype=np.float)
-code = np.empty(8,dtype=np.int)
+x=np.size(raster,1)
+y=np.size(raster,0)
+print (x)
+print (y)
+gradient = np.empty((8,x-2,y-2),dtype=np.float)
 for k in range(8):
     theta = -k*np.pi/4
     j, i = np.int(1.5*np.cos(theta)),-np.int(1.5*np.sin(theta))
     d = np.linalg.norm([i,j])
-    gradient[k] = (raster[1+i: N-1+i,1+j: N-1+j]-raster[1: N-1,1: N-1])/d
+    gradient[k] = (raster[1+i: y-1+i,1+j: x-1+j]-raster[1: y-1,1: x-1])/d
 direction = (-gradient).argmax(axis=0)
 print (direction)
-result = code.take(direction)
 
 ####Work out what ius going on here
 
