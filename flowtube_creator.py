@@ -48,21 +48,35 @@ print (raster)
 temp = np.flip(raster,0)
 raster= temp
 print(raster)
-x=np.size(raster,1)
-y=np.size(raster,0)
-print (x)
-print (y)
+y=np.size(raster,1)
+x=np.size(raster,0)
+print (np.shape(raster))
+
 gradient = np.empty((8,x-2,y-2),dtype=np.float)
+print (np.shape(gradient))
 for k in range(8):
     theta = -k*np.pi/4
     j, i = np.int(1.5*np.cos(theta)),-np.int(1.5*np.sin(theta))
     d = np.linalg.norm([i,j])
-    gradient[k] = (raster[1+i: y-1+i,1+j: x-1+j]-raster[1: y-1,1: x-1])/d
-direction = (-gradient).argmax(axis=0)
+    print (i,j)
+    print 
+    #print(d)
+    for row in range(1,y-1):
+        for col in range(1,x-1):
+            gradient[k,col-1,row-1] = (raster[col+i,row+j]-raster[col,row])/d
+            #print (k)
+    #print (gradient[k])
+    direction = (-gradient).argmax(axis=0)
 print (direction)
+print (np.shape(direction))
+direction = direction.astype(int)
 
+np.savetxt("dir.csv", direction, delimiter=",")
+
+plt.matshow(direction)
+plt.savefig('test_direction')
 ####Work out what ius going on here
-
+ 
 
 
 #Check differences between raster
