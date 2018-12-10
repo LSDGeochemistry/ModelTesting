@@ -12,19 +12,19 @@ import numpy as np
 #Concentration at time zero
 c_0 = 0
 #Disintegration constant of the radionuclide
-gam = 0
+gam = 500*np.power(10.0,-9)
 #Time (years)
 t = 1000
 #CRn production rate (a/g/yr)
 p_0 = 5.11
 #Depth (cm)
-z = np.arange(0,60,1)
+z = np.arange(0,50,0.1)
 #Erosion rate (cm/yr)
 e = 0.01
 #Density
 rho = 1.8
 #Attentuation length
-lam = 162
+lam = 160
 
 
 #####

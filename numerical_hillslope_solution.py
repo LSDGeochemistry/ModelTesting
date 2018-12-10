@@ -27,7 +27,7 @@ z_2 = 100
 #Get the distance for each node
 d_z = float(z_1-z_2)/nodes 
 ###Initialise a hillslope
-#Sets the widths as 1m
+#Sets the widths in m
 width = np.arange(0,nodes,dtype=float)
 width.fill(0.1)
 #Creates a length of x nodes
@@ -68,7 +68,7 @@ count = 0
 #print area
 #Now loop through the hillslope
 for i in range (0,t):
-    for j in range (1,50):
+    for j in range (1,nodes):
         #Get the flux using a simple linear sediment flux law
         flux[j] = -rho*k_2*width[j-1]*depth[j-1]*((elevation[j-1]-elevation[j])/(length[j-1]-length[j]))
         #Convert the flux to a depth
