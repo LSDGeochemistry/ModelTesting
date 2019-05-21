@@ -1,0 +1,123 @@
+MixingModel Parameter File Contents
+sed_trans_param.stparam
+rho_s
+density of soil (kg/m^3)
+rho_r
+density of rock (kg/m^3)
+K_h
+diffusivity
+S_c
+Critical hillslope gradient
+W_0
+Lowering rate of PDZ-CAZ boundary when no PDZ
+Gamma
+Length scale that describes decline in PDZ production as a function of PDZ thickness
+N
+Not required?
+N_0
+Minimum ?gopher? density
+N_m
+Maximum ?gopher? density
+Beta 
+rate of exponential decline with depth?
+K_g
+diffusivity used in gopher runs?
+CRN_trans_param.CRNparam
+start_depth
+starting depth (m?)
+vert_mix_vel
+vertical mixing velocity (m/yr?)
+horiz_mix_vel
+horizontal mixing velocity(m/yr?)
+Omega 
+Proportion of particles moving at any one time
+part_conc
+particle concentration (particles/kg)
+CRN_muon_param_switch
+sets muon production rate to that of either the Schaller or Granger papers.
+single_scaling
+ the single scaling factor encompassing elevation, self, snow, and latitude shielding effects.
+C_10Be_initial
+C_26Al_initial
+C_36Cl_initial
+C_14C_initial
+C_21Ne_initial
+C_3He_initial
+initial in situ concentrations (atoms/g)
+M_supply_surface
+Supply of meteoric 10Be from the surface (atoms/cm^2/yr)
+k_f10Be
+e-folding depth of meteoric 10Be deposition (cm^2/g)
+k2_f10Be
+?
+Chi_f10Be
+Fraction of supply that goes into the shallow meteoric supply
+deltad
+determines number of depth intervals? (m)
+n_PDZ_intervals
+number of intervals in mixed zone
+n_CAZ_intervals
+number of intervals in unmixed zone
+lat
+latitude
+lon
+longitude
+site_elev
+site elvevation (m)
+Fsp
+?
+ft_detail.param
+The flowtube is discretised into a series of nodes and boundaries between the nodes starting with the uppermost boundary. Output files will only contain information for the nodes themselves.
+n_box_bdrys
+number of box boundarys
+ds_dist
+downslope distance (m)
+width
+box width (m)
+A_poly
+
+meas_elev
+box elevation (m)
+interp_h
+box thickness (m?)
+model_run.param
+flux_switch
+determines flux law (1 to 7) 1:linear flux, 2:linear flux with
+prod_switch
+determines soil production law 
+flux_us
+flux from upslope
+dt
+time interval
+CRN_switch
+Sets the cosmogenic key (0= no CRN, 1= all CRN, 2= all,neutron only, 3= 10Be full). Default is 2.
+end_time
+time when simulation ends (years)
+surf_erate
+surface erosion rate in m/yr (negative for erosion)
+particle_printing_interval
+time interval at which particles are printed (years
+eroded_catch_window
+
+max_age
+maximum age of a particle
+n_spacings
+
+particle_insert_interval
+time interval for inserting new particles (years)
+weathering_time_interval
+time interval for CrunchFlow weathering (years)
+ref_frame_switch
+switch for the VTK files, 0  = printing relative to base level, 1 =  printing as a function of depth.
+SS_flux
+The steady state flux 
+Lower_boundary_condition
+Sets whether the lower boundary condition is either flux (1) or elevation (2) controlled
+Volume_particle_data.in
+Needs to match the master crunch infile in terms of number of minerals, mineral names,
+Format is:
+n_types
+type_index type_name mass_fraction density lambda
+followed by size fraction information:
+n_sizes
+type_index size_fraction_2^this_number mfrac

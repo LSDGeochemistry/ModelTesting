@@ -33,14 +33,14 @@ c_z = c_0*np.exp(-gam*t)+((p_0*np.exp(-rho*z/lam))/(gam+rho*e/lam))*(1-np.exp(-t
 data2 = np.genfromtxt('C:/Workspace/github/LSDMixingModel/Runs/Model_testing/run3/p_trans_out.pout', delimiter=' ',skip_header=0, names=['time', 'bn', 'pid','z_loc','s_loc','d_loc','buff','page','osl','be_conc','c_conc','ne_conc'])
 be_conc =data2['be_conc']    
 d_loc =data2['d_loc']*100
-#print c_z
+print max(d_loc)
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 ax.plot(c_z,z, label = 'Lal and Chen Analytical Model')
 plt.gca().invert_yaxis()
 plt.tick_params(axis='both', which='major', labelsize=8)
-ax.scatter(be_conc,d_loc,c='k',s= 0.4, label = 'Mixing Model')
+ax.scatter(be_conc,d_loc,c='k',s= 1.0, label = 'Mixing Model')
 ax.set_xlabel("CRN Concentration")
 ax.set_ylabel("Soil Depth")
 #ax.set_xlim(0,5500)

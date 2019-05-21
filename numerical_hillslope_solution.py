@@ -18,7 +18,7 @@ rho = 1000
 k_1 = 0.005
 k_2 = 0.012
 #Time of Model (yr)
-t = 5000
+t = 50000
 #Number of nodes (for simplicity each node represents a 1m interval)
 nodes = 50
 #Elevation of top and bottom of hillslope (m)
@@ -38,7 +38,7 @@ length = np.arange(0,nodes,1)
 #depth = np.random.rand(nodes,1.0)
 #Sets all depths to a fixed value
 depth = np.arange(0,nodes,dtype=float)
-depth.fill(0.5)
+depth.fill(0.1)
 
 #Used in the loops for getting new depths
 d_depth = np.zeros_like(depth,dtype=float)
@@ -97,7 +97,7 @@ for i in range (0,t):
         #print s[j-1]
         depth [j-1] = depth[j-1]+s[j-1]
     #print depth at whatever intervals (here every 100 years)
-    if count == 100:
+    if count == 1000:
         depth_print_line = str(i)+" "+str(depth)+"\n"
         depth_print.append(depth_print_line)
         count = 0
