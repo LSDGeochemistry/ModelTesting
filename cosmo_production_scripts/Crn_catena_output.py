@@ -14,9 +14,13 @@ from glob import glob
 #Number of profiles (bins)
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/flux_tests/mixing_0_0001/'
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/flux_tests/mixing_0_0001_erosion_0_001/'
-DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/flux_tests/no_mixing/'
+#DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/flux_tests/no_mixing/'
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/flux_tests/no_mixing_erosion_0_001/'
-n_bins = 12
+#DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/hillslope_flux_test/no_mixing/'
+#DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/hillslope_flux_test/no_mixing_erosion_0_00001/'
+DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/hillslope_flux_test/mixing_0_0001/'
+#DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/hillslope_flux_test/mixing_0_0001_erosion_0_00001/'
+n_bins = 10
 print('This is the input file directory: '+DataDirectory)
 bins = pd.read_csv(DataDirectory+'p_trans_out.pout', sep=" ",names=['time', 'bn', 'pid','z_loc','s_loc','d_loc','buff','page','osl','be_conc','fallout_be_conc','c_conc','ne_conc'] )
 print('loaded the particle file')
