@@ -2,9 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.interpolate import make_interp_spline, BSpline
+#DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/mixing_0_0001/'
+DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/mixing_0_0001_erosion_0_001/'
+#DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/no_mixing/'
+#DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/flux_tests/no_mixing_erosion_0_001/'
 
-
-DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/hillslope_flux_test/mixing_0_0001/'
 
 #Load the relevant data
 hillslope = pd.read_csv(DataDirectory+'ft_properties.out', sep=" ",header=0,comment='-')
