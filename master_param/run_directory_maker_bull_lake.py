@@ -12,35 +12,35 @@ n_runs = 10
 #Change the erosion rate or mixing velocity
 #Mixing Velocity limits
 min_vel = 0.0
-max_vel = 0.01
+max_vel = 0.001
 #Erosion rate limits
 min_e = 0.0
-max_e = 0.0001
+max_e = 0.0
 #Create the arrays to populate
 steps = (max_vel-min_vel)/n_runs
 mix_vel =np.arange(min_vel,max_vel,steps)
 print(mix_vel)
-steps = (max_e-min_e)/n_runs
-e =np.arange(min_e,max_e,steps)
-print(e)
+#steps = (max_e-min_e)/n_runs
+#e =np.arange(min_e,max_e,steps)
+#print(e)
 
 #CRM parameter file
-m_CRN_fname = root + '/master_param/bull_lake/CRN_trans_param.CRNparam'
+m_CRN_fname = root + '/bull_lake/CRN_trans_param.CRNparam'
 #Flowtube parameter file
-m_ftd_fname = root + '/master_param/bull_lake/ft_details.param'
+m_ftd_fname = root + '/bull_lake/ft_details.param'
 #Model run parameter file
-m_mrn_fname = root + '/master_param/bull_lake/model_run.param'
+m_mrn_fname = root + '/bull_lake/model_run.param'
 #Soil profile parameter file
-m_prf_fname = root + '/master_param/bull_lake/profile.sm'
+m_prf_fname = root + '/bull_lake/profile.sm'
 #Sediment transport paramter file
-m_st_fname = root + '/master_param/bull_lake/sed_trans_param.stparam'
+m_st_fname = root + '/bull_lake/sed_trans_param.stparam'
 #Particle data parameter file
-m_pd_fname = root + '/master_param/bull_lake/VolumeParticleData.in'
+m_pd_fname = root + '/bull_lake/VolumeParticleData.in'
 
 for i in range(1,n_runs+1):
     
     
-    runname = '/run' + str(i) + 'mixing_' + str(mix_vel[i-1]) + '_erosion_' + str(e[i-1])
+    runname = '/run' + str(i) + 'mixing_' + str(mix_vel[i-1])
     run_name = runname.replace('.','_')
     dirname = root+run_name
     print(dirname)
