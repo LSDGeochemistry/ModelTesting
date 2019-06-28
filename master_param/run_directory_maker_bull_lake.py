@@ -49,7 +49,7 @@ for i in range(1,n_runs+1):
     
     r_CRN_fname = 'CRN_trans_param.CRNParam'
     file = open('%s' % r_CRN_fname, 'w')
-    file.write('start_depth: ' + str(1.9) + '\n')
+    file.write('start_depth: ' + str(0.6) + '\n')
     file.write('vert_mix_vel: ' + str(mix_vel[i-1]) + '\n')
     file.write('horiz_mix_vel: ' + str(0.0) + '\n')
     file.write('Omega: ' + str(0.5) + '\n')
@@ -68,8 +68,8 @@ for i in range(1,n_runs+1):
     file.write('deltad: ' + str(0.0001) + '\n')
     file.write('k2_f10Be: ' + str(0.001) + '\n')
     file.write('chi_f10Be: ' + str(0.7) + '\n')
-    file.write('n_PDZ_intervals: ' + str(10) + '\n')
-    file.write('n_CAZ_intervals: ' + str(15) + '\n')
+    file.write('n_PDZ_intervals: ' + str(5) + '\n')
+    file.write('n_CAZ_intervals: ' + str(10) + '\n')
     file.write('lat: ' + str(42) + '\n')
     file.write('lon: ' + str(109) + '\n')
     file.write('site_elev: ' + str(2298) + '\n')
@@ -88,7 +88,7 @@ for i in range(1,n_runs+1):
     file.write('dt: ' + str(100) + '\n')
     file.write('CRN_switch: ' + str(2) + '\n')
     file.write('end_time: ' + str(140000) + '\n')
-    file.write('surf_erate: -' + str(0.000014) + '\n')
+    file.write('surf_erate: ' + str(0.0) + '\n')
     file.write('particle_printing_interval: ' + str(140000) + '\n')
     file.write('eroded_catch_window: ' + str(10000) + '\n')
     file.write('max_age: ' + str(140000) + '\n')
@@ -97,7 +97,7 @@ for i in range(1,n_runs+1):
     file.write('weathering_time_interval: ' + str(998) + '\n')
     file.write('ref_frame_switch: ' + str(0) + '\n')
     file.write('SS_flux: ' + str(0) + '\n')
-    file.write('lower_boundary_condition: ' + str(2) + '\n')
+    file.write('lower_boundary_condition: ' + str(1) + '\n')
     file.close
     
     
