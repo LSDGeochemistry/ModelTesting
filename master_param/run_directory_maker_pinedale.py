@@ -86,7 +86,7 @@ for i in range(1,n_runs+1):
     file.write('prod_switch: ' + str(2) + '\n')
     file.write('flux_us: ' + str(0) + '\n')
     file.write('dt: ' + str(100) + '\n')
-    file.write('CRN_switch: ' + str(2) + '\n')
+    file.write('CRN_switch: ' + str(1) + '\n')
     file.write('end_time: ' + str(17500) + '\n')
     file.write('surf_erate: -' + str(0.000005) + '\n')
     file.write('particle_printing_interval: ' + str(17500) + '\n')
