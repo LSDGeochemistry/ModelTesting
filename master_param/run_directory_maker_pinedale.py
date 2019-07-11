@@ -12,7 +12,7 @@ n_runs = 10
 #Change the erosion rate or mixing velocity
 #Mixing Velocity limits
 min_vel = 0.0
-max_vel = 0.001
+max_vel = 0.005
 #Erosion rate limits
 min_e = 0.0
 max_e = 0.0
@@ -25,17 +25,17 @@ print(mix_vel)
 #print(e)
 
 #CRM parameter file
-m_CRN_fname = root + '/bull_lake/CRN_trans_param.CRNparam'
+m_CRN_fname = root + '/pinedale/CRN_trans_param.CRNparam'
 #Flowtube parameter file
-m_ftd_fname = root + '/bull_lake/ft_details.param'
+m_ftd_fname = root + '/pinedale/ft_details.param'
 #Model run parameter file
-m_mrn_fname = root + '/bull_lake/model_run.param'
+m_mrn_fname = root + '/pinedale/model_run.param'
 #Soil profile parameter file
-m_prf_fname = root + '/bull_lake/profile.sm'
+m_prf_fname = root + '/pinedale/profile.sm'
 #Sediment transport paramter file
-m_st_fname = root + '/bull_lake/sed_trans_param.stparam'
+m_st_fname = root + '/pinedale/sed_trans_param.stparam'
 #Particle data parameter file
-m_pd_fname = root + '/bull_lake/VolumeParticleData.in'
+m_pd_fname = root + '/pinedale/VolumeParticleData.in'
 
 for i in range(1,n_runs+1):
     
@@ -49,14 +49,14 @@ for i in range(1,n_runs+1):
     
     r_CRN_fname = 'CRN_trans_param.CRNParam'
     file = open('%s' % r_CRN_fname, 'w')
-    file.write('start_depth: ' + str(3.8) + '\n')
+    file.write('start_depth: ' + str(2.0) + '\n')
     file.write('vert_mix_vel: ' + str(mix_vel[i-1]) + '\n')
     file.write('horiz_mix_vel: ' + str(0.0) + '\n')
     file.write('Omega: ' + str(0.5) + '\n')
     file.write('part_conc: ' + str(0.5) + '\n')
     file.write('CRN_muon_param_switch: ' + str(2) + '\n')
     file.write('single_scaling: ' + str(5.5) + '\n')
-    file.write('C_10Be_initia: ' + str(140000.0) + '\n')
+    file.write('C_10Be_initia: ' + str(20000.0) + '\n')
     file.write('C_f10Be_initial: ' + str(0.0) + '\n')
     file.write('C_26Al_initial: ' + str(0.0) + '\n')
     file.write('C_36Cl_initial: ' + str(0.0) + '\n')
@@ -71,8 +71,8 @@ for i in range(1,n_runs+1):
     file.write('n_PDZ_intervals: ' + str(5) + '\n')
     file.write('n_CAZ_intervals: ' + str(10) + '\n')
     file.write('lat: ' + str(42) + '\n')
-    file.write('lon: ' + str(-109) + '\n')
-    file.write('site_elev: ' + str(2285) + '\n')
+    file.write('lon: ' + str(109) + '\n')
+    file.write('site_elev: ' + str(2298) + '\n')
     file.write('Fsp: ' + str(0.98) + '\n')
     file.close
     
@@ -87,13 +87,13 @@ for i in range(1,n_runs+1):
     file.write('flux_us: ' + str(0) + '\n')
     file.write('dt: ' + str(100) + '\n')
     file.write('CRN_switch: ' + str(2) + '\n')
-    file.write('end_time: ' + str(67500) + '\n')
-    file.write('surf_erate: -' + str(0.0) + '\n')
-    file.write('particle_printing_interval: ' + str(67500) + '\n')
-    file.write('eroded_catch_window: ' + str(1000) + '\n')
-    file.write('max_age: ' + str(72500) + '\n')
+    file.write('end_time: ' + str(17500) + '\n')
+    file.write('surf_erate: -' + str(0.000005) + '\n')
+    file.write('particle_printing_interval: ' + str(17500) + '\n')
+    file.write('eroded_catch_window: ' + str(500) + '\n')
+    file.write('max_age: ' + str(17500) + '\n')
     file.write('n_spacings: ' + str(500) + '\n')
-    file.write('particle_insert_interval: ' + str(1000) + '\n')
+    file.write('particle_insert_interval: ' + str(500) + '\n')
     file.write('weathering_time_interval: ' + str(998) + '\n')
     file.write('ref_frame_switch: ' + str(0) + '\n')
     file.write('SS_flux: ' + str(0) + '\n')
