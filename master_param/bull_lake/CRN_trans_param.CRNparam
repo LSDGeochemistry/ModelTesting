@@ -1,4 +1,4 @@
-start_depth: 1.9
+start_depth: 1.5
 vert_mix_vel: 
 horiz_mix_vel: 0.0
 Omega: 0.5
@@ -13,7 +13,7 @@ C_14C_initial: 0.0
 C_21Ne_initial: 0.0
 C_3He_initial: 0.0
 M_supply_surface: 0.0
-k_f10Be: 5
+k_f10Be: 0.5
 deltad: 0.0001
 k2_f10Be: 0.001
 chi_f10Be: 0.7

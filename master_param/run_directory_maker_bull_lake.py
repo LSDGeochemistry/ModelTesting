@@ -11,8 +11,8 @@ root=os.getcwd()
 n_runs = 10
 #Change the erosion rate or mixing velocity
 #Mixing Velocity limits
-min_vel = 0.0
-max_vel = 0.001
+min_vel = 0.0001
+max_vel = 0.0011
 #Erosion rate limits
 min_e = 0.0
 max_e = 0.0
@@ -40,7 +40,7 @@ m_pd_fname = root + '/bull_lake/VolumeParticleData.in'
 for i in range(1,n_runs+1):
     
     
-    runname = '/run' + str(i) + 'mixing_' + str(mix_vel[i-1])
+    runname = '/run' + 'mixing_' + str(mix_vel[i-1])
     run_name = runname.replace('.','_')
     dirname = root+run_name
     print(dirname)
@@ -49,10 +49,10 @@ for i in range(1,n_runs+1):
     
     r_CRN_fname = 'CRN_trans_param.CRNParam'
     file = open('%s' % r_CRN_fname, 'w')
-    file.write('start_depth: ' + str(3.8) + '\n')
+    file.write('start_depth: ' + str(1.5) + '\n')
     file.write('vert_mix_vel: ' + str(mix_vel[i-1]) + '\n')
     file.write('horiz_mix_vel: ' + str(0.0) + '\n')
-    file.write('Omega: ' + str(0.5) + '\n')
+    file.write('Omega: ' + str(1.0) + '\n')
     file.write('part_conc: ' + str(0.5) + '\n')
     file.write('CRN_muon_param_switch: ' + str(2) + '\n')
     file.write('single_scaling: ' + str(5.5) + '\n')
@@ -64,7 +64,7 @@ for i in range(1,n_runs+1):
     file.write('C_21Ne_initial: ' + str(0.0) + '\n')
     file.write('C_3He_initial: ' + str(0.0) + '\n')
     file.write('M_supply_surface: ' + str(0.0) + '\n')
-    file.write('k_f10Be: ' + str(5) + '\n')
+    file.write('k_f10Be: ' + str(0.5) + '\n')
     file.write('deltad: ' + str(0.0001) + '\n')
     file.write('k2_f10Be: ' + str(0.001) + '\n')
     file.write('chi_f10Be: ' + str(0.7) + '\n')
@@ -83,15 +83,15 @@ for i in range(1,n_runs+1):
     r_mrn_fname = 'model_run.param'
     file = open('%s' % r_mrn_fname, 'w')
     file.write('flux_switch: ' + str(1) + '\n')
-    file.write('prod_switch: ' + str(2) + '\n')
+    file.write('prod_switch: ' + str(1) + '\n')
     file.write('flux_us: ' + str(0) + '\n')
     file.write('dt: ' + str(1000) + '\n')
     file.write('CRN_switch: ' + str(1) + '\n')
-    file.write('end_time: ' + str(140000) + '\n')
+    file.write('end_time: ' + str(67500) + '\n')
     file.write('surf_erate: -' + str(0.0) + '\n')
-    file.write('particle_printing_interval: ' + str(140000) + '\n')
+    file.write('particle_printing_interval: ' + str(67500) + '\n')
     file.write('eroded_catch_window: ' + str(1000) + '\n')
-    file.write('max_age: ' + str(140000) + '\n')
+    file.write('max_age: ' + str(67500) + '\n')
     file.write('n_spacings: ' + str(500) + '\n')
     file.write('particle_insert_interval: ' + str(1000) + '\n')
     file.write('weathering_time_interval: ' + str(998) + '\n')
