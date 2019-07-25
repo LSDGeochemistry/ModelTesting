@@ -11,8 +11,8 @@ runs = (len(next(os.walk(root))[1]))
 print(runs)
 counter = 1
 #Create bins, to do this need to set depth first
-d =3.8
-bins = np.linspace(0,d,21)
+d =1.5
+bins = np.linspace(0,d,15)
 #set figure size
 fig = plt.figure(figsize=(10,10))
 ax=fig.add_subplot(1,1,1)

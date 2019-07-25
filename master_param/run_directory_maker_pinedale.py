@@ -49,10 +49,10 @@ for i in range(1,n_runs+1):
     
     r_CRN_fname = 'CRN_trans_param.CRNParam'
     file = open('%s' % r_CRN_fname, 'w')
-    file.write('start_depth: ' + str(2.0) + '\n')
+    file.write('start_depth: ' + str(1.4) + '\n')
     file.write('vert_mix_vel: ' + str(mix_vel[i-1]) + '\n')
     file.write('horiz_mix_vel: ' + str(0.0) + '\n')
-    file.write('Omega: ' + str(0.5) + '\n')
+    file.write('Omega: ' + str(1.0) + '\n')
     file.write('part_conc: ' + str(0.5) + '\n')
     file.write('CRN_muon_param_switch: ' + str(2) + '\n')
     file.write('single_scaling: ' + str(5.5) + '\n')
@@ -85,7 +85,7 @@ for i in range(1,n_runs+1):
     file.write('flux_switch: ' + str(1) + '\n')
     file.write('prod_switch: ' + str(2) + '\n')
     file.write('flux_us: ' + str(0) + '\n')
-    file.write('dt: ' + str(100) + '\n')
+    file.write('dt: ' + str(1000) + '\n')
     file.write('CRN_switch: ' + str(1) + '\n')
     file.write('end_time: ' + str(21000) + '\n')
     file.write('surf_erate: -' + str(0.0000025) + '\n')

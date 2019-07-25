@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from glob import glob
 import os as os
+from scipy.interpolate import make_interp_spline, BSpline
 
 #Set the root directory
 root = 'C:/Workspace/github/LSDMixingModel/Runs/pinedale/'
@@ -11,8 +12,8 @@ runs = (len(next(os.walk(root))[1]))
 print(runs)
 counter = 1
 #Create bins, to do this need to set depth first
-d =3.8
-bins = np.linspace(0,d,21)
+d =1.5
+bins = np.linspace(0,d,15)
 #set figure size
 fig = plt.figure(figsize=(10,10))
 ax=fig.add_subplot(1,1,1)
@@ -48,6 +49,10 @@ be_conc = be_conc*100000
 d_loc = initial_data['depth'].values
 #print(d_loc)
 ax.scatter(be_conc,d_loc,s=20,c='k')
+
+
+plt.plot(be_conc,d_loc,linewidth=1,c='k')
+
 ax.set_ylim(0,d)        
 plt.gca().invert_yaxis()    
 axcb = plt.colorbar(cb)
