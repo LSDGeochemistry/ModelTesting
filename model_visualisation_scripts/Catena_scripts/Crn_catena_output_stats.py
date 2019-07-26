@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May  21 16:11:54 2019
-
-@author: LHMK
-"""
-
+#Script for plotting various hillslope stats by bin from the model output
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -18,13 +12,14 @@ DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/mixing_0_0
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/no_mixing/'
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/flux_tests/no_mixing_erosion_0_001/'
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/hillslope_flux_test/no_mixing_erosion_0_00001/'
+#Number of profiles (bins), should rip this straight from model output for simplicity!!!
 
 n_bins = 10
 print('This is the input file directory: '+DataDirectory)
 bins = pd.read_csv(DataDirectory+'p_trans_out.pout', sep=" ",names=['time', 'bn', 'pid','z_loc','s_loc','d_loc','buff','page','osl','be_conc','fallout_be_conc','c_conc','ne_conc'] )
 print('loaded the particle file')
 
-
+#PLot the age distribution of Be concentration as a function of age in each bin 
 fig = plt.figure(figsize=(14,14))
 for i in range(n_bins):
     temp_bins=bins[bins['bn'] == i]
@@ -33,7 +28,7 @@ for i in range(n_bins):
     cb.set_clim(vmin=0,vmax=n_bins-1)
     
 plt.savefig(DataDirectory+'hillslope_crn_conc_bins_age', dpi=100, bbox_inches='tight')
-
+#PLot the age distribution of Be concentration in each bin as a histogram
 fig = plt.figure(figsize=(14,14))
 for i in range(n_bins):
     temp_bins=bins[bins['bn'] == i]
@@ -43,7 +38,7 @@ for i in range(n_bins):
     
     
 plt.savefig(DataDirectory+'hillslope_crn_conc_bins_hist', dpi=100, bbox_inches='tight')    
-    
+#Plot some boxplots to show the range of ages in each bin    
 plot_bins = [[] for i in range(n_bins)]
 print(len(plot_bins))
 for i in range(n_bins):

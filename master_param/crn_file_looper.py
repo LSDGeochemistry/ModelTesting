@@ -1,3 +1,5 @@
+#A script that loops through and plots all the cosmo data on one graph coloured by run number
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -8,12 +10,13 @@ import os as os
 root = 'C:/Workspace/github/LSDMixingModel/Runs/bull_lake/'
 #set number of runs
 runs = (len(next(os.walk(root))[1]))
+#Check you're getting all the data
 print(runs)
 counter = 1
 #set figure size
 fig = plt.figure(figsize=(10,10))
 ax=fig.add_subplot(1,1,1)
-
+#Loop through and plot data colouring by the run number
 for subdirs, dirs, files in os.walk(root):
     for dirs in dirs:
         data = pd.read_csv(root+dirs+'/p_trans_out.pout', sep=" ",names=['time', 'bn', 'pid','z_loc','s_loc','d_loc','buff','page','osl','be_conc','fallout_be_conc','c_conc','ne_conc'] )
