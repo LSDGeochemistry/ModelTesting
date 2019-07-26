@@ -1,11 +1,11 @@
 #Script for setting up a series of runs with varying parameter files
-#Currently only for mixing model so ignore the crunch infileno crunc infile
+#Currently only for mixing model so ignores the crunch infile
 import numpy as np
 import subprocess
 import os
 import shutil
 from decimal import Decimal
-
+#This assumes that the directory maker sits in a folder one up from the one containing the master param files
 root=os.getcwd()
 #Specify number of runs
 n_runs = 10
@@ -13,18 +13,20 @@ n_runs = 10
 #Mixing Velocity limits
 min_vel = 0.0001
 max_vel = 0.0011
-#Erosion rate limits
+#Erosion rate limits (not used here but can be turned on)
 min_e = 0.0
 max_e = 0.0
 #Create the arrays to populate
 steps = (max_vel-min_vel)/n_runs
 mix_vel =np.arange(min_vel,max_vel,steps)
-print(mix_vel)
+#print(mix_vel)
 #steps = (max_e-min_e)/n_runs
 #e =np.arange(min_e,max_e,steps)
 #print(e)
 
-#CRM parameter file
+#These contain the links to the master param files, if parameters need to be varied then this needs to be done by writing a new param file via a loop as below. Replacing specific parts of a text file would make this smoother but this looks tricksy.
+
+#CRN parameter file
 m_CRN_fname = root + '/bull_lake/CRN_trans_param.CRNparam'
 #Flowtube parameter file
 m_ftd_fname = root + '/bull_lake/ft_details.param'
@@ -37,13 +39,16 @@ m_st_fname = root + '/bull_lake/sed_trans_param.stparam'
 #Particle data parameter file
 m_pd_fname = root + '/bull_lake/VolumeParticleData.in'
 
+#Here we loop through and create new folders containing the param files which can then be put into the mixing model. Currently the CRN and Model run param files are writted not copied allowing paramters to be varied in them
+
 for i in range(1,n_runs+1):
     
-    
-    runname = '/run' + 'mixing_' + str(mix_vel[i-1])
+    #Create a folder to populate then navigating to it plus giving it a helpful name.
+    runname = '/run_' + 'mixing_' + str(mix_vel[i-1])
+    #To get around decimal points in the file naming
     run_name = runname.replace('.','_')
     dirname = root+run_name
-    print(dirname)
+    #print(dirname)
     os.mkdir(dirname)
     os.chdir(dirname)
     
@@ -110,5 +115,6 @@ for i in range(1,n_runs+1):
     
     r_pd_fname ='VolumeParticleData.in'
     shutil.copy(m_pd_fname,r_pd_fname)
+    #Change directory back to the root directory for start of new loop
     os.chdir(root)
     

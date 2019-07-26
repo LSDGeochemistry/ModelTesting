@@ -31,9 +31,10 @@ ax.scatter(hillslope['s'],zeta,s=5,c='k',marker="_")
 #Plot the surface of the saprolite
 ax.scatter(hillslope['s'],eta,s=5,c='k',marker="_")
 #Plotting fucntions for putting a curved line through the surfaces
-#PLot the line
+#Plot the line
 hillslope_line = np.linspace(h_min,h_max,100)
 #Here is some annoying array conversion that probs isn't needed but to do with pandas dataframes and the spline stuff
+#Note that when fitting a monotonic function the x array must be varying constantly, this will most likely be the error if it doesnt work.
 hl_arr =np.array(hillslope['s'])
 z_arr = np.array(zeta.iloc[0])
 e_arr = np.array(eta.iloc[0])
@@ -42,7 +43,7 @@ z_spl=make_interp_spline(hl_arr,z_arr,k=3)
 e_spl=make_interp_spline(hl_arr,e_arr,k=3)
 zeta_smooth = z_spl(hillslope_line)
 eta_smooth = e_spl(hillslope_line)
-#PLot the lines
+#Plot the lines
 plt.plot(hillslope_line,zeta_smooth,linewidth=1,c='k')
 plt.plot(hillslope_line,eta_smooth,linewidth=1,c='k')
 #Fill the lines with a fetching brown colour to help see it, change later

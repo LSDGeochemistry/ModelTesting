@@ -5,7 +5,7 @@ import subprocess
 import os
 import shutil
 from decimal import Decimal
-
+#This assumes that the directory maker sits in a folder one up from the one containing the master param files
 root=os.getcwd()
 #Specify number of runs
 n_runs = 10
@@ -19,10 +19,12 @@ max_e = 0.0001
 #Create the arrays to populate
 steps = (max_vel-min_vel)/n_runs
 mix_vel =np.arange(min_vel,max_vel,steps)
-print(mix_vel)
+#print(mix_vel)
 steps = (max_e-min_e)/n_runs
 e =np.arange(min_e,max_e,steps)
-print(e)
+#print(e)
+
+#These contain the links to the master param files, if parameters need to be varied then this needs to be done by writing a new param file via a loop as below. Replacing specific parts of a text file would make this smoother but this looks tricksy.
 
 #CRM parameter file
 m_CRN_fname = root + '/master_param/bull_lake/CRN_trans_param.CRNparam'
@@ -36,6 +38,8 @@ m_prf_fname = root + '/master_param/bull_lake/profile.sm'
 m_st_fname = root + '/master_param/bull_lake/sed_trans_param.stparam'
 #Particle data parameter file
 m_pd_fname = root + '/master_param/bull_lake/VolumeParticleData.in'
+
+#Here we loop through and create new folders containing the param files which can then be put into the mixing model. Currently the CRN and Model run param files are writted not copied allowing paramters to be varied in them
 
 for i in range(1,n_runs+1):
     
@@ -110,5 +114,6 @@ for i in range(1,n_runs+1):
     
     r_pd_fname ='VolumeParticleData.in'
     shutil.copy(m_pd_fname,r_pd_fname)
+    #Change directory back to the root directory for start of new loop
     os.chdir(root)
     
