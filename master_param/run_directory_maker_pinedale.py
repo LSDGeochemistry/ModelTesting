@@ -8,7 +8,7 @@ from decimal import Decimal
 #This assumes that the directory maker sits in a folder one up from the one containing the master param files
 root=os.getcwd()
 #Specify number of runs
-n_runs = 10
+n_runs = 5
 #Change the erosion rate or mixing velocity
 #Mixing Velocity limits
 min_vel = 0.0
@@ -44,7 +44,7 @@ m_pd_fname = root + '/pinedale/VolumeParticleData.in'
 for i in range(1,n_runs+1):
     
     #Create a folder to populate then navigating to it plus giving it a helpful name.
-    runname = '/run_' + 'mixing_' + str(mix_vel[i-1])
+    runname = '/pinedale_' + 'mixing_' + str(mix_vel[i-1])
     #To get around decimal points in the file naming
     run_name = runname.replace('.','_')
     dirname = root+run_name
@@ -75,7 +75,7 @@ for i in range(1,n_runs+1):
     file.write('chi_f10Be: ' + str(0.7) + '\n')
     file.write('n_PDZ_intervals: ' + str(5) + '\n')
     file.write('n_CAZ_intervals: ' + str(10) + '\n')
-    file.write('lat: ' + str(42) + '\n')
+    file.write('lat: ' + str(43) + '\n')
     file.write('lon: ' + str(109) + '\n')
     file.write('site_elev: ' + str(2298) + '\n')
     file.write('Fsp: ' + str(0.98) + '\n')
@@ -88,17 +88,17 @@ for i in range(1,n_runs+1):
     r_mrn_fname = 'model_run.param'
     file = open('%s' % r_mrn_fname, 'w')
     file.write('flux_switch: ' + str(1) + '\n')
-    file.write('prod_switch: ' + str(2) + '\n')
+    file.write('prod_switch: ' + str(1) + '\n')
     file.write('flux_us: ' + str(0) + '\n')
-    file.write('dt: ' + str(1000) + '\n')
+    file.write('dt: ' + str(10) + '\n')
     file.write('CRN_switch: ' + str(1) + '\n')
-    file.write('end_time: ' + str(21000) + '\n')
-    file.write('surf_erate: -' + str(0.0000025) + '\n')
-    file.write('particle_printing_interval: ' + str(21000) + '\n')
+    file.write('end_time: ' + str(17000) + '\n')
+    file.write('surf_erate: -' + str(0.0000015) + '\n')
+    file.write('particle_printing_interval: ' + str(17000) + '\n')
     file.write('eroded_catch_window: ' + str(500) + '\n')
-    file.write('max_age: ' + str(21000) + '\n')
+    file.write('max_age: ' + str(17000) + '\n')
     file.write('n_spacings: ' + str(500) + '\n')
-    file.write('particle_insert_interval: ' + str(500) + '\n')
+    file.write('particle_insert_interval: ' + str(100) + '\n')
     file.write('weathering_time_interval: ' + str(998) + '\n')
     file.write('ref_frame_switch: ' + str(0) + '\n')
     file.write('SS_flux: ' + str(0) + '\n')
