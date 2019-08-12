@@ -61,7 +61,7 @@ for i in range(1,n_runs+1):
     file.write('part_conc: ' + str(0.5) + '\n')
     file.write('CRN_muon_param_switch: ' + str(2) + '\n')
     file.write('single_scaling: ' + str(5.5) + '\n')
-    file.write('C_10Be_initia: ' + str(140000.0) + '\n')
+    file.write('C_10Be_initia: ' + str(170000.0) + '\n')
     file.write('C_f10Be_initial: ' + str(0.0) + '\n')
     file.write('C_26Al_initial: ' + str(0.0) + '\n')
     file.write('C_36Cl_initial: ' + str(0.0) + '\n')

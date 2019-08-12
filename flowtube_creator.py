@@ -51,7 +51,7 @@ print(raster)
 y=np.size(raster,1)
 x=np.size(raster,0)
 print (np.shape(raster))
-
+#Creates a flow direction raster
 gradient = np.empty((8,x-2,y-2),dtype=np.float)
 print (np.shape(gradient))
 for k in range(8):
