@@ -12,6 +12,9 @@ fname = "R:/feather_river_mixing_paper/dem/pomd_out.tif"
 #Open the DEM using GDAL
 dem = gdal.Open(fname)
 print('loaded dem')
+#Load the soil pit data, atm is just a placeholder array
+pits = [[50,50],[48,45],[45,35],[40,30]]
+
 #print(dem.GetMetadata)
 #Convert the raster
 raster = np.array(dem.GetRasterBand(1).ReadAsArray())
@@ -32,7 +35,40 @@ center_point = [[50,50]]
 center_point_line = plt.streamplot(xv,yv,gradx,grady,start_points=center_point,linewidth=0.4,density=10).lines
 #Create a temp list to store the data from the centerpoint, this creates a list of arraysfof reach point
 center_point_vertices = center_point_line.get_segments()
-print(center_point_vertices)
+#Now create a new array to make things easier, saves the distance downslope with the x, y, and z coordinates(z coordinates not ciurrently added)
+ft_center = np.zeros((len(center_point_vertices),4),dtype=np.float)
+for i in range (1,len(center_point_vertices)):
+   ft_center[i][0] = np.sqrt((center_point_vertices[i][0][0]-center_point_vertices[i][1][0])**2+(center_point_vertices[i][0][1]-center_point_vertices[i][1][1])**2)+ft_center[i-1][0]
+   ft_center[i][1] = (center_point_vertices[i][0][0]+center_point_vertices[i][1][0])/2
+   ft_center[i][2] = (center_point_vertices[i][0][1]+center_point_vertices[i][1][1])/2
+#print(ft_center)
+#Now find the flowlines for the boundary of the flowtube
+#Left most boundary
+boundary_1 = [[50,55]]
+boundary_1_line = plt.streamplot(xv,yv,gradx,grady,start_points=boundary_1,linewidth=0.4,density=10).lines
+boundary_1_vertices = boundary_1_line.get_segments()
+ft_left = np.zeros((len(boundary_1_vertices),4),dtype=np.float)
+for i in range (1,len(boundary_1_vertices)):
+   ft_left[i][0] = np.sqrt((boundary_1_vertices[i][0][0]-boundary_1_vertices[i][1][0])**2+(boundary_1_vertices[i][0][1]-boundary_1_vertices[i][1][1])**2)+ft_left[i-1][0]
+   ft_left[i][1] = (boundary_1_vertices[i][0][0]+boundary_1_vertices[i][1][0])/2
+   ft_left[i][2] = (boundary_1_vertices[i][0][1]+boundary_1_vertices[i][1][1])/2
+#print(ft_left)
+#Right most boundary
+boundary_2 = [[50,45]]
+boundary_2_line = plt.streamplot(xv,yv,gradx,grady,start_points=boundary_2,linewidth=0.4,density=10).lines
+boundary_2_vertices = boundary_2_line.get_segments()
+ft_right = np.zeros((len(boundary_2_vertices),4),dtype=np.float)
+for i in range (1,len(boundary_2_vertices)):
+   ft_right[i][0] = np.sqrt((boundary_2_vertices[i][0][0]-boundary_2_vertices[i][1][0])**2+(boundary_2_vertices[i][0][1]-boundary_2_vertices[i][1][1])**2)+ft_right[i-1][0]
+   ft_right[i][1] = (boundary_2_vertices[i][0][0]+boundary_2_vertices[i][1][0])/2
+   ft_right[i][2] = (boundary_2_vertices[i][0][1]+boundary_2_vertices[i][1][1])/2
+#print(ft_right)
+
+#Now need to get the data from the flowtube
+
+
+
+
 
 
 
