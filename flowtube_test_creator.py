@@ -14,7 +14,8 @@ dem = gdal.Open(fname)
 print('loaded dem')
 #Load the soil pit data, atm is just a placeholder array
 pits = [[50,50],[48,45],[45,35],[40,30]]
-
+#Distance along the flowtube for the starting point
+start_width = 1.0
 #print(dem.GetMetadata)
 #Convert the raster
 raster = np.array(dem.GetRasterBand(1).ReadAsArray())
@@ -42,27 +43,76 @@ for i in range (1,len(center_point_vertices)):
    ft_center[i][1] = (center_point_vertices[i][0][0]+center_point_vertices[i][1][0])/2
    ft_center[i][2] = (center_point_vertices[i][0][1]+center_point_vertices[i][1][1])/2
 #print(ft_center)
+
 #Now find the flowlines for the boundary of the flowtube
-#Left most boundary
-boundary_1 = [[50,55]]
-boundary_1_line = plt.streamplot(xv,yv,gradx,grady,start_points=boundary_1,linewidth=0.4,density=10).lines
+#Boundary 1, start by moving along the contour line for a given amount
+contour_1 = plt.streamplot(xv,yv,grady,-(gradx),start_points=center_point,linewidth=0.4,density=10).lines
+contour_1_vertices = contour_1.get_segments()
+contour_1_data = np.zeros((len(contour_1_vertices),4),dtype=np.float)
+#Now loop through to get the prescribed distance away
+for i in range (1,len(contour_1_vertices)):
+   contour_1_data[i][0] = np.sqrt((contour_1_vertices[i][0][0]-contour_1_vertices[i][1][0])**2+(contour_1_vertices[i][0][1]-contour_1_vertices[i][1][1])**2)+contour_1_data[i-1][0]
+   contour_1_data[i][1] = (contour_1_vertices[i][0][0]+contour_1_vertices[i][1][0])/2
+   contour_1_data[i][2] = (contour_1_vertices[i][0][1]+contour_1_vertices[i][1][1])/2
+   #find the closest indext for the x value
+   if contour_1_vertices[i][1][1] == center_point[0][0]:
+        center_index_x = i
+#Now move along the flowtube contour to the prescribed distance along to get the values within the max starting width defined earlier        
+for i in range (center_index_x,len(contour_1_data)):
+        print('found')
+        bdry1_width = []
+        for j in range (0,(len(contour_1_data)-i-1)):
+            if contour_1_data[j+i][0]-contour_1_data[i][0] <= start_width:
+                    bdry1_width.append(contour_1_data[i+j])
+                   
+        break
+#The start point for this boundary is taken from the final row of values from the bdry1_width list       
+bdry1_start = [[bdry1_width[len(bdry1_width)-1][1],bdry1_width[len(bdry1_width)-1][2]]]
+#Print the x y coordinates of this point to make sure they're reasonable
+print(bdry1_start)
+#Now feed these boundary points into the streamp[lot fucntion to get the flowtube                    
+boundary_1_line = plt.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10).lines
 boundary_1_vertices = boundary_1_line.get_segments()
-ft_left = np.zeros((len(boundary_1_vertices),4),dtype=np.float)
+bdry1 = np.zeros((len(boundary_1_vertices),4),dtype=np.float)
 for i in range (1,len(boundary_1_vertices)):
-   ft_left[i][0] = np.sqrt((boundary_1_vertices[i][0][0]-boundary_1_vertices[i][1][0])**2+(boundary_1_vertices[i][0][1]-boundary_1_vertices[i][1][1])**2)+ft_left[i-1][0]
-   ft_left[i][1] = (boundary_1_vertices[i][0][0]+boundary_1_vertices[i][1][0])/2
-   ft_left[i][2] = (boundary_1_vertices[i][0][1]+boundary_1_vertices[i][1][1])/2
-#print(ft_left)
-#Right most boundary
-boundary_2 = [[50,45]]
-boundary_2_line = plt.streamplot(xv,yv,gradx,grady,start_points=boundary_2,linewidth=0.4,density=10).lines
+   bdry1[i][0] = np.sqrt((boundary_1_vertices[i][0][0]-boundary_1_vertices[i][1][0])**2+(boundary_1_vertices[i][0][1]-boundary_1_vertices[i][1][1])**2)+bdry1[i-1][0]
+   bdry1[i][1] = (boundary_1_vertices[i][0][0]+boundary_1_vertices[i][1][0])/2
+   bdry1[i][2] = (boundary_1_vertices[i][0][1]+boundary_1_vertices[i][1][1])/2
+
+##Right most boundary
+contour_2 = plt.streamplot(xv,yv,-(grady),gradx,start_points=center_point,linewidth=0.4,density=10).lines
+contour_2_vertices = contour_2.get_segments()
+contour_2_data = np.zeros((len(contour_2_vertices),4),dtype=np.float)
+#Now loop through to get the prescribed distance away
+for i in range (1,len(contour_1_vertices)):
+   contour_2_data[i][0] = np.sqrt((contour_2_vertices[i][0][0]-contour_2_vertices[i][1][0])**2+(contour_2_vertices[i][0][1]-contour_2_vertices[i][1][1])**2)+contour_2_data[i-1][0]
+   contour_2_data[i][1] = (contour_2_vertices[i][0][0]+contour_2_vertices[i][1][0])/2
+   contour_2_data[i][2] = (contour_2_vertices[i][0][1]+contour_2_vertices[i][1][1])/2
+   #find the closest indext for the x value
+   if contour_2_vertices[i][1][1] == center_point[0][0]:
+        center_index_x = i
+#Now move along the flowtube contour to the prescribed distance along to get the values within the max starting width defined earlier        
+for i in range (center_index_x,len(contour_2_data)):
+        print('found')
+        bdry2_width = []
+        for j in range (0,(len(contour_2_data)-i-1)):
+            if contour_2_data[j+i][0]-contour_2_data[i][0] <= start_width:
+                    bdry2_width.append(contour_2_data[i+j])
+                   
+        break
+#The start point for this boundary is taken from the final row of values from the bdry1_width list       
+bdry2_start = [[bdry2_width[len(bdry2_width)-1][1],bdry2_width[len(bdry2_width)-1][2]]]
+#Print the x y coordinates of this point to make sure they're reasonable
+print(bdry2_start)
+#Now feed these boundary points into the streamp[lot fucntion to get the flowtube                    
+boundary_2_line = plt.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10).lines
 boundary_2_vertices = boundary_2_line.get_segments()
-ft_right = np.zeros((len(boundary_2_vertices),4),dtype=np.float)
+bdry2 = np.zeros((len(boundary_2_vertices),4),dtype=np.float)
 for i in range (1,len(boundary_2_vertices)):
-   ft_right[i][0] = np.sqrt((boundary_2_vertices[i][0][0]-boundary_2_vertices[i][1][0])**2+(boundary_2_vertices[i][0][1]-boundary_2_vertices[i][1][1])**2)+ft_right[i-1][0]
-   ft_right[i][1] = (boundary_2_vertices[i][0][0]+boundary_2_vertices[i][1][0])/2
-   ft_right[i][2] = (boundary_2_vertices[i][0][1]+boundary_2_vertices[i][1][1])/2
-#print(ft_right)
+   bdry2[i][0] = np.sqrt((boundary_2_vertices[i][0][0]-boundary_2_vertices[i][1][0])**2+(boundary_2_vertices[i][0][1]-boundary_2_vertices[i][1][1])**2)+bdry2[i-1][0]
+   bdry2[i][1] = (boundary_2_vertices[i][0][0]+boundary_2_vertices[i][1][0])/2
+   bdry2[i][2] = (boundary_2_vertices[i][0][1]+boundary_2_vertices[i][1][1])/2
+
 
 #Now need to get the data from the flowtube
 
@@ -73,29 +123,27 @@ for i in range (1,len(boundary_2_vertices)):
 
 
 
-##seedpoint = np.array([[50,50,50],[46,50,54]])
-#seedpoint = [[50,45],[50,50],[50,55]]
-#fig = plt.figure()
-#ax=fig.add_subplot(1,1,1)
+###Plot the figure
+fig = plt.figure()
+ax=fig.add_subplot(1,1,1)
 #ax.matshow(raster)
-#ax.streamplot(xv,yv,gradx,grady,start_points=seedpoint,linewidth=0.4,density=10)
-#
-#
-#ax.set_xlim(20,60)
-#ax.set_ylim(20,60)
-#test_list = ax.streamplot(xv,yv,gradx,grady,start_points=seedpoint,linewidth=0.4,density=10).lines
-##print(test_list)
-#test = test_list.get_segments()
-##print(test)
-##plt.quiver(gradx,grady, scale=30)
+ax.streamplot(xv,yv,gradx,grady,start_points=center_point,linewidth=0.4,density=10)
+ax.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10)
+ax.streamplot(xv,yv,gradx,grady,start_points=bdry2_start,linewidth=0.4,density=10)
+
+ax.set_xlim(35,55)
+ax.set_ylim(20,55)
 
 
-#plt.savefig('test.png')
-#plt.matshow(raster)
-#
-#plt.savefig('test_raster.png')
-#plt.close()
-#
-#
-#
-#print('done')
+
+
+
+plt.savefig('test.png')
+plt.matshow(raster)
+
+plt.savefig('test_raster.png')
+plt.close()
+
+
+
+print('done')
