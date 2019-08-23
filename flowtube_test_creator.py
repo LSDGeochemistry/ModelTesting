@@ -56,7 +56,9 @@ for i in range (1,len(center_point_vertices)):
 #print(ft_center)
 
 #Now find the flowlines for the boundary of the flowtube
-#Boundary 1, start by moving along the contour line for a given amount
+
+###########Left most boundary#############################
+#Boundary 1, start by moving along the contour line for a given amount towards y axis (so x = 0)
 contour_1 = plt.streamplot(xv,yv,grady,-(gradx),start_points=center_point,linewidth=0.4,density=10).lines
 contour_1_vertices = contour_1.get_segments()
 contour_1_data = np.zeros((len(contour_1_vertices),4),dtype=np.float)
@@ -91,8 +93,9 @@ for i in range (1,len(boundary_1_vertices)):
    bdry1[i][2] = (boundary_1_vertices[i][0][1]+boundary_1_vertices[i][1][1])/2
    if boundary_1_vertices[i][0][0] == bdry1_start[0][0]:
         boundary_index_1 = i
-    
-##Right most boundary
+###############################################################
+        
+#########Right most boundary###################################
 contour_2 = plt.streamplot(xv,yv,-(grady),gradx,start_points=center_point,linewidth=0.4,density=10).lines
 contour_2_vertices = contour_2.get_segments()
 contour_2_data = np.zeros((len(contour_2_vertices),4),dtype=np.float)
@@ -128,7 +131,7 @@ for i in range (1,len(boundary_2_vertices)):
    bdry2[i][2] = (boundary_2_vertices[i][0][1]+boundary_2_vertices[i][1][1])/2
    if boundary_2_vertices[i][0][0] == bdry2_start[0][0]:
         boundary_index_2 = i
-
+###############################################################
 
 ###Now cut the flowtube arrays so they just go from the start points rather they go from the defined start points
 ft_center = np.delete(ft_center,slice(0,center_index),axis=0)
@@ -140,7 +143,84 @@ bdry2 = np.delete(bdry2,slice(0,boundary_index_2),axis=0)
 
       
 
-#Now need to get the data from the flowtube
+#Now need to get the width data from the flowtube
+#Retrace the flowtube from one boundary to the other
+#Start by running a flowtube from the coordinates of the starting point for boundary number 1
+#temp_width = plt.streamplot(xv,yv,-(gradx),grady,start_points=bdry1_start,linewidth=0.4,density=10).lines
+#temp_vertices = temp_width.get_segments()
+#temp_width = np.zeros((len(temp_vertices),4),dtype=np.float)
+#for i in range (1,len(temp_vertices)):
+#   temp_width[i][0] = np.sqrt((temp_vertices[i][0][0]-temp_vertices[i][1][0])**2+(temp_vertices[i][0][1]-temp_vertices[i][1][1])**2)+temp_width[i-1][0]
+#   temp_width[i][1] = (temp_vertices[i][0][0]+temp_vertices[i][1][0])/2
+#   temp_width[i][2] = (temp_vertices[i][0][1]+temp_vertices[i][1][1])/2
+#   if temp_vertices[i][0][0] == bdry1_start[0][0]:
+#        temp_index = i
+#temp_width = np.delete(temp_width,slice(0,temp_index),axis=0)       
+#
+##Now loop through to get the width at this point
+##Some temp variables for the loop
+#d_old = 100.0
+#d_new = 99.0
+#dist = 0.0
+#i = 0
+#while (d_new < d_old):
+#    d_old = d_new
+#    i = i+1
+#    dx = temp_width[i][1]-bdry2[0][1]
+#    dy = temp_width[i][2]-bdry2[0][2]
+#    d_new = np.sqrt((dx**2)+(dy**2))
+#    ddx = temp_width[i][1]-temp_width[i-1][1]
+#    ddy = temp_width[i][2]-temp_width[i-1][2]
+#    dist = dist + np.sqrt((ddx**2)+(ddy**2))
+    
+
+#define the length of segment used
+max_dist = 50
+#Loop through now finding the width at every point along with the area.
+#First create an array to accomodate this infromation
+flowtube = np.zeros((max_dist,11),dtype=np.float)
+for i in range(0,max_dist):
+#Get the centerline data
+        flowtube[i][0] = ft_center[i][0]
+        flowtube[i][1] = ft_center[i][1]
+        flowtube[i][2] = ft_center[i][2]
+        flowtube[i][3] = ft_center[i][3]
+#Now for the boundary/width data
+        flowtube[i][4] = bdry1[i][1]
+        flowtube[i][5] = bdry1[i][2]
+        flowtube[i][6] = bdry2[i][1]
+        flowtube[i][7] = bdry2[i][2]
+        start_point = [[flowtube[i][4],flowtube[i][5]]]
+#Now being a labourious loop to gather data
+        temp_width = plt.streamplot(xv,yv,-(gradx),grady,start_points=start_point,linewidth=0.4,density=10).lines
+        temp_vertices = temp_width.get_segments()
+        temp_width = np.zeros((len(temp_vertices),4),dtype=np.float)
+        for k in range (1,len(temp_vertices)):
+           temp_width[k][0] = np.sqrt((temp_vertices[k][0][0]-temp_vertices[k][1][0])**2+(temp_vertices[k][0][1]-temp_vertices[k][1][1])**2)+temp_width[k-1][0]
+           temp_width[k][1] = (temp_vertices[k][0][0]+temp_vertices[k][1][0])/2
+           temp_width[k][2] = (temp_vertices[k][0][1]+temp_vertices[k][1][1])/2
+           if temp_vertices[k][0][0] == start_point[0][0]:
+                temp_index = k
+        temp_width = np.delete(temp_width,slice(0,temp_index),axis=0)       
+
+        #Now loop through to get the width at this point
+        #Some temp variables for the loop
+        d_old = 100.0
+        d_new = 99.0
+        dist = 0.0
+        j = 0
+        while (d_new < d_old):
+            d_old = d_new
+            j = j+1
+            dx = temp_width[j][1]-flowtube[i][6]
+            dy = temp_width[j][2]-flowtube[i][7]
+            d_new = np.sqrt((dx**2)+(dy**2))
+            ddx = temp_width[j][1]-temp_width[j-1][1]
+            ddy = temp_width[j][2]-temp_width[j-1][2]
+            dist = dist + np.sqrt((ddx**2)+(ddy**2))
+        flowtube[i][8] = dist
+print(flowtube)
+
 
 
 
@@ -157,8 +237,8 @@ ax.streamplot(xv,yv,gradx,grady,start_points=center_point,linewidth=0.4,density=
 ax.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10)
 ax.streamplot(xv,yv,gradx,grady,start_points=bdry2_start,linewidth=0.4,density=10)
 
-ax.set_xlim(35,55)
-ax.set_ylim(20,55)
+#ax.set_xlim(35,55)
+#ax.set_ylim(20,55)
 
 
 
