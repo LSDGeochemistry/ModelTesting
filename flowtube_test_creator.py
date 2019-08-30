@@ -5,8 +5,6 @@ import numpy as np
 from osgeo import gdal
 
 ###Section containing user defined parameters
-#Ehe DEM resolution (m)
-dem_r = 10
 #The pathway to the DEM
 fname = "R:/feather_river_mixing_paper/dem/pomd_out.tif"
 #Open the DEM using GDAL
@@ -134,9 +132,9 @@ for i in range (1,len(boundary_2_vertices)):
 ###############################################################
 
 ###Now cut the flowtube arrays so they just go from the start points rather they go from the defined start points
-ft_center = np.delete(ft_center,slice(0,center_index),axis=0)
-bdry1 = np.delete(bdry1,slice(0,boundary_index_1),axis=0)
-bdry2 = np.delete(bdry2,slice(0,boundary_index_2),axis=0)
+ft_center = np.delete(ft_center,slice(0,center_index-1),axis=0)
+bdry1 = np.delete(bdry1,slice(0,boundary_index_1-1),axis=0)
+bdry2 = np.delete(bdry2,slice(0,boundary_index_2-1),axis=0)
 
 
         
@@ -191,7 +189,7 @@ for i in range(0,max_dist):
         flowtube[i][6] = bdry2[i][1]
         flowtube[i][7] = bdry2[i][2]
         start_point = [[flowtube[i][4],flowtube[i][5]]]
-#Now being a labourious loop to gather data
+#Now begin a labourious loop to gather data
         temp_width = plt.streamplot(xv,yv,-(gradx),grady,start_points=start_point,linewidth=0.4,density=10).lines
         temp_vertices = temp_width.get_segments()
         temp_width = np.zeros((len(temp_vertices),4),dtype=np.float)
@@ -201,7 +199,7 @@ for i in range(0,max_dist):
            temp_width[k][2] = (temp_vertices[k][0][1]+temp_vertices[k][1][1])/2
            if temp_vertices[k][0][0] == start_point[0][0]:
                 temp_index = k
-        temp_width = np.delete(temp_width,slice(0,temp_index),axis=0)       
+        temp_width = np.delete(temp_width,slice(0,temp_index-1),axis=0)       
 
         #Now loop through to get the width at this point
         #Some temp variables for the loop
@@ -219,7 +217,53 @@ for i in range(0,max_dist):
             ddy = temp_width[j][2]-temp_width[j-1][2]
             dist = dist + np.sqrt((ddx**2)+(ddy**2))
         flowtube[i][8] = dist
-print(flowtube)
+        #Now do the area via a quadrilateral method
+        if i != 0:
+            dxa = flowtube[i-1][4]-flowtube[i-1][1]
+            dya = flowtube[i-1][5]-flowtube[i-1][2]
+            a = np.sqrt(dxa**2+dya**2)
+            dxb = flowtube[i-1][1]-flowtube[i][1]
+            dyb = flowtube[i-1][2]-flowtube[i][2]
+            b = np.sqrt(dxb**2+dyb**2)
+            dxc = flowtube[i][1]-flowtube[i][4]
+            dyc = flowtube[i][2]-flowtube[i][5]
+            c = np.sqrt(dxc**2+dyc**2)
+            dxd = flowtube[i][4]-flowtube[i-1][4]
+            dyd = flowtube[i][5]-flowtube[i-1][5]
+            d = np.sqrt(dxd**2+dyd**2)
+            dxp = flowtube[i-1][1]-flowtube[i][4]
+            dyp = flowtube[i-1][2]-flowtube[i][5]
+            p = np.sqrt(dxp**2+dyp**2)
+            dxq = flowtube[i-1][4]-flowtube[i][1]
+            dyq = flowtube[i-1][5]-flowtube[i][2]
+            q = np.sqrt(dxq**2+dyq**2)
+            
+            quad_A1 = 0.25*np.sqrt(4*p*p*q*q-(b*b+d*d-a*a-c*c)*(b*b+d*d-a*a-c*c))
+            
+            dxa = flowtube[i-1][6]-flowtube[i-1][1]
+            dya = flowtube[i-1][7]-flowtube[i-1][2]
+            a = np.sqrt(dxa**2+dya**2)
+            dxb = flowtube[i-1][1]-flowtube[i][1]
+            dyb = flowtube[i-1][2]-flowtube[i][2]
+            b = np.sqrt(dxb**2+dyb**2)
+            dxc = flowtube[i][1]-flowtube[i][6]
+            dyc = flowtube[i][2]-flowtube[i][7]
+            c = np.sqrt(dxc**2+dyc**2)
+            dxd = flowtube[i][6]-flowtube[i-1][6]
+            dyd = flowtube[i][7]-flowtube[i-1][7]
+            d = np.sqrt(dxd**2+dyd**2)
+            dxp = flowtube[i-1][1]-flowtube[i][6]
+            dyp = flowtube[i-1][2]-flowtube[i][7]
+            p = np.sqrt(dxp**2+dyp**2)
+            dxq = flowtube[i-1][6]-flowtube[i][1]
+            dyq = flowtube[i-1][7]-flowtube[i][2]
+            q = np.sqrt(dxq**2+dyq**2)
+            
+            quad_A2 =0.25*np.sqrt(4*p*p*q*q-(b*b+d*d-a*a-c*c)*(b*b+d*d-a*a-c*c))
+            
+            flowtube[i][9] = quad_A1+quad_A2
+        
+#print(flowtube)
 
 
 
