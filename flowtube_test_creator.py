@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from osgeo import gdal
+from scipy import interpolate
 
 ###Section containing user defined parameters
 #The pathway to the DEM
@@ -28,6 +29,7 @@ gradx = np.gradient(raster, axis = 1)*-1
 grady = np.gradient(raster, axis = 0)*-1
 #Find the shape of each raster and save it to make a grid
 raster_shape = np.shape(gradx)
+print(raster_shape)
 np.asarray(raster_shape)
 nx,ny=[raster_shape[1],raster_shape[0]]
 #Set up the paramters to make the grid
@@ -42,11 +44,15 @@ center_point_line = plt.streamplot(xv,yv,gradx,grady,start_points=center_point,l
 center_point_vertices = center_point_line.get_segments()
 #Now create a new array to make things easier, saves the distance downslope with the x, y, and z coordinates(z coordinates not currently added)
 ft_center = np.zeros((len(center_point_vertices),4),dtype=np.float)
-#Now go throug the temp vertices file and extract the values [distance,x,y,z(not implemented yet)]
+raster_temp = np.flipud(raster)
+
+#Now go throug the temp vertices file and extract the values [distance,x,y,z]
 for i in range (1,len(center_point_vertices)):
    ft_center[i][0] = np.sqrt((center_point_vertices[i][0][0]-center_point_vertices[i][1][0])**2+(center_point_vertices[i][0][1]-center_point_vertices[i][1][1])**2)+ft_center[i-1][0]
    ft_center[i][1] = (center_point_vertices[i][0][0]+center_point_vertices[i][1][0])/2
    ft_center[i][2] = (center_point_vertices[i][0][1]+center_point_vertices[i][1][1])/2
+   elev = interpolate.RectBivariateSpline(y,x, raster_temp); zi = elev(ft_center[i][0], ft_center[i][1])
+   ft_center[i][3] = zi
    #Find the index of the starting point
    if center_point_vertices[i][0][0] == center_point[0][0]:
         center_index = i
@@ -264,7 +270,7 @@ for i in range(0,max_dist):
             flowtube[i][9] = quad_A1+quad_A2
         
 #print(flowtube)
-
+np.savetxt("flowtube_details.csv", flowtube, delimiter=",")
 
 
 
