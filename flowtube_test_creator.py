@@ -36,7 +36,7 @@ nx,ny=[raster_shape[1],raster_shape[0]]
 x = np.linspace(0, nx, nx)
 y = np.linspace(0, ny, ny)
 xv, yv = np.meshgrid(x, y)
-#Set the start point for the centreline on the grid
+#Set the start point for the centerline on the grid
 center_point = [[50,50]]
 #Now find the centerline
 center_point_line = plt.streamplot(xv,yv,gradx,grady,start_points=center_point,linewidth=0.4,density=10).lines
@@ -268,6 +268,7 @@ for i in range(0,max_dist):
             quad_A2 =0.25*np.sqrt(4*p*p*q*q-(b*b+d*d-a*a-c*c)*(b*b+d*d-a*a-c*c))
             
             flowtube[i][9] = quad_A1+quad_A2
+           
         
 #print(flowtube)
 np.savetxt("flowtube_details.csv", flowtube, delimiter=",")
