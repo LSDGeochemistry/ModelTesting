@@ -5,38 +5,38 @@ from scipy import interpolate
 
 ###Section containing user defined parameters
 #The pathway to the DEM
-fname = "R:/feather_river_mixing_paper/dem/pomd_out.tif"
+fname = "C:/Workspace/github/ModelTesting/flowtube_testing/feather_dems/fta.bil"
 #Open the DEM using GDAL
 dem = gdal.Open(fname)
 print('loaded dem')
 #Read in the coordinates, needs changed for whatever files being rea
 ###Depends on the file format
 #For POMD
-coord_file = open("R:/feather_river_mixing_paper/dem/pomd_out.tfw","r")
-coord_file = coord_file.read().split('\n')
-coord_file = [float(i) for i in coord_file]
-up_left_e = coord_file[4]
-up_left_n = coord_file[5]
-center_point = [[645391,4389698]]
+#coord_file = open("R:/feather_river_mixing_paper/dem/pomd_out.tfw","r")
+#coord_file = coord_file.read().split('\n')
+#coord_file = [float(i) for i in coord_file]
+#up_left_e = coord_file[4]
+#up_left_n = coord_file[5]
+#center_point = [[645391,4389698]]
 #For BRC
 #up_left_e = 645632.5
 #up_left_n = 4390104.5
 #center_point = [[645654.5,4390031]]
 
 #For FTA
-#up_left_e = 645616.5
-#up_left_n = 4390063.5
-#center_point = [[645634,4390048]]
+up_left_e = 645616.5
+up_left_n = 4390063.5
+center_point = [[645634,4390048]]
 #Load the soil pit data and convert to the array coordinates
 #Change these accordingly
-pits = np.loadtxt("C:/Workspace/github/ModelTesting/flowtube_testing/pomd_sites.txt",delimiter=',',skiprows=1,usecols=(2,3))
+pits = np.loadtxt("C:/Workspace/github/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
 
 for i in range(0,len(pits)):
     pits[i][0] = pits[i][0]-up_left_e
     pits[i][1] = (pits[i][1]-up_left_n)*-1
 pits = np.array(pits)
     
-
+#print(pits)
 
 
 
@@ -69,7 +69,7 @@ x = np.linspace(0, nx, nx)
 y = np.linspace(0, ny, ny)
 xv, yv = np.meshgrid(x, y)
 #Set the start point for the centerline on the grid Move this up to getting file?
-#center_point = [[645634,4390048]]
+
 #convert the start point
 center_point[0][0] = center_point[0][0]-up_left_e
 center_point[0][1] = (center_point[0][1]-up_left_n)*-1
@@ -178,6 +178,8 @@ for i in range (1,len(boundary_2_vertices)):
 ft_center = np.delete(ft_center,slice(0,center_index-1),axis=0)
 bdry1 = np.delete(bdry1,slice(0,boundary_index_1-1),axis=0)
 bdry2 = np.delete(bdry2,slice(0,boundary_index_2-1),axis=0)
+#Fix it so the bottom of the flowtube is just past the last pit, removes some hassle of manual changing of length etc
+ft_center = ft_center[ft_center[:,3]>(min(pits[:,2])-1)]
 
 
         
@@ -215,12 +217,11 @@ bdry2 = np.delete(bdry2,slice(0,boundary_index_2-1),axis=0)
 #    dist = dist + np.sqrt((ddx**2)+(ddy**2))
     
 
-#define the length of segment used
-max_dist = 50
+
 #Loop through now finding the width at every point along with the area.
 #First create an array to accomodate this infromation
-flowtube = np.zeros((max_dist,11),dtype=np.float)
-for i in range(0,max_dist):
+flowtube = np.zeros((len(ft_center),11),dtype=np.float)
+for i in range(0,len(ft_center)):
 #Get the centerline data
         flowtube[i][0] = ft_center[i][0]
         flowtube[i][1] = ft_center[i][1]
@@ -308,7 +309,7 @@ for i in range(0,max_dist):
            
         
 #print(flowtube)
-np.savetxt("pomd_flowtube_details.csv", flowtube, delimiter=",",header='distance,center_x,center_y,center_z,bdry1_x,bdry1_y,brdy2_x,brdy2_y,width,area_quad,area_other')
+np.savetxt("fta_flowtube_details.csv", flowtube, delimiter=",",header='distance,center_x,center_y,center_z,bdry1_x,bdry1_y,brdy2_x,brdy2_y,width,area_quad,area_other')
 
 
 
