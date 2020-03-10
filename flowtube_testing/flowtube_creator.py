@@ -124,7 +124,7 @@ for i in range (center_index_x,len(contour_1_data)):
 bdry1_start = [[bdry1_width[len(bdry1_width)-1][1],bdry1_width[len(bdry1_width)-1][2]]]
 #Print the x y coordinates of this point to make sure they're reasonable
 print(bdry1_start)
-#Now feed these boundary points into the streamp[lot fucntion to get the flowtube                    
+#Now feed these boundary points into the streamplot fucntion to get the flowtube                    
 boundary_1_line = plt.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10).lines
 boundary_1_vertices = boundary_1_line.get_segments()
 bdry1 = np.zeros((len(boundary_1_vertices),4),dtype=np.float)
