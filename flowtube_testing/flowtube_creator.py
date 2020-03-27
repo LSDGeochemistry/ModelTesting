@@ -5,7 +5,7 @@ from scipy import interpolate
 
 ###Section containing user defined parameters
 #The pathway to the DEM
-fname = "C:/Workspace/github/ModelTesting/flowtube_testing/feather_dems/fta.bil"
+fname = "/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/feather_dems/fta.bil"
 #Open the DEM using GDAL
 dem = gdal.Open(fname)
 print('loaded dem')
@@ -26,10 +26,10 @@ print('loaded dem')
 #For FTA
 up_left_e = 645616.5
 up_left_n = 4390063.5
-center_point = [[645634,4390048]]
+center_point = [[645635.5,4390046.5]]
 #Load the soil pit data and convert to the array coordinates
 #Change these accordingly
-pits = np.loadtxt("C:/Workspace/github/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
+pits = np.loadtxt("/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
 
 for i in range(0,len(pits)):
     pits[i][0] = pits[i][0]-up_left_e
@@ -46,7 +46,7 @@ pits = np.array(pits)
 
 
 #Distance along the flowtube for the starting point
-start_width = 4.0
+start_width = 2.0
 #print(dem.GetMetadata)
 #Convert the raster
 raster = np.array(dem.GetRasterBand(1).ReadAsArray())
@@ -338,7 +338,7 @@ ax.scatter(pits[:,0],pits[:,1])
 #plt.savefig('test.png')
 #plt.matshow(raster)
 
-plt.savefig('pomd_test.png')
+plt.savefig('fta_test.png')
 plt.close()
 
 

@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 
 #Read the flowtube file
-flowtube_file = np.genfromtxt("C:/Workspace/github/ModelTesting/flowtube_testing/fta_flowtube_details.csv", delimiter =',', skip_header=0, names=['distance','center_x','center_y','center_z','bdry1_x','bdry1_y','brdy2_x','brdy2_y','width','area_quad','area_other'] )
+flowtube_file = np.genfromtxt("/Users/louis/Documents/GitHub/ModelTesting/flowtube_testing/fta_flowtube_details.csv", delimiter =',', skip_header=0, names=['distance','center_x','center_y','center_z','bdry1_x','bdry1_y','brdy2_x','brdy2_y','width','area_quad','area_other'] )
 print('loaded')
 #Read the pit data file
-pit_data = np.loadtxt("C:/Workspace/github/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
+pit_data = np.loadtxt("/Users/louis/Documents/GitHub/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
 #Sort the pit data file with highest elevation first
 pit_data[::-1].sort(axis=0)
 #Number of pits
@@ -18,30 +18,50 @@ pit_counter = 0
 bin_counter = 1
 counter = 0
 
-#set up the flowtube out file array
+#set up the flowtube out file array making the first row details from the flowtube file
 flowtube = np.zeros((n_bins,5),dtype=np.float)
-flowtube[0][0] = flowtube_file[0]['distance']
+flowtube[0][0] = 0.001
 flowtube[0][1] = flowtube_file[0]['width']
 flowtube[0][2] = flowtube_file[0]['area_quad']
 flowtube[0][3] = flowtube_file[0]['center_z']
 flowtube[0][4] = 0.1
-#print((flowtube_file['center_z'][0]+0.3))
-#print(pit_data[pit_counter][2])
+#print(flowtube)
+#print((flowtube_file['center_z'][0]))
+#print(pit_data[pit_counter][2]-0.3)
 for i in range(1,len(flowtube_file)):
-    if (flowtube_file['center_z'][i]+0.3) > pit_data[pit_counter][2]: 
+    if (flowtube_file['center_z'][i]-0.1) > pit_data[pit_counter][2]: 
         #Add the distance
-        flowtube[bin_counter][0] = flowtube[bin_counter][0]+(flowtube_file[i]['distance']-flowtube_file[0]['distance'])
+        flowtube[bin_counter][0] = (flowtube_file[i]['distance']-flowtube_file[0]['distance'])
         #Record the width
         flowtube[bin_counter][1] = flowtube_file[i]['width']
         #Add the area
-        flowtube[bin_counter][2] = flowtube[bin_counter][2]+(flowtube_file[i]['area_quad'])
+        flowtube[bin_counter][2] = flowtube_file[i-1]['area_quad']+(flowtube_file[i]['area_quad'])
         #Record the elevation
         flowtube[bin_counter][3] = flowtube_file[i]['center_z']
         ###What to do about interp h?
-        #print('done')
-    elif (flowtube_file['center_z'][i]-0.3) > pit_data[pit_counter][2] :
+#        print('done')
+    elif (flowtube_file['center_z'][i]) > (pit_data[pit_counter][2]-0.1):
+        flowtube[bin_counter+1][0] = (flowtube_file[i]['distance']-flowtube_file[0]['distance'])
+        #Record the width
+        flowtube[bin_counter+1][1] = flowtube_file[i]['width']
+        #Add the area
+        flowtube[bin_counter+1][2] = flowtube_file[i-1]['area_quad']+(flowtube_file[i]['area_quad'])
+        #Record the elevation
+        flowtube[bin_counter+1][3] = flowtube_file[i]['center_z']
+#        print('meesa done master anakin')
+    elif pit_counter+2 <= n_pits:
+         pit_counter = pit_counter+1
+         bin_counter = bin_counter+2
+         
+
+#         print(pit_counter)
+#         print(bin_counter)
+      
+
+np.savetxt("fta_flowtube_file.csv", flowtube, delimiter=",",header='ds_dist,width,Area,elev,interp_h')       
+
         
-print(flowtube)
+
 
         
         
