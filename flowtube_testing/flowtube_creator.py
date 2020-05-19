@@ -13,15 +13,16 @@ print('loaded dem')
 ###Depends on the file format
 #For POMD
 #coord_file = open("R:/feather_river_mixing_paper/dem/pomd_out.tfw","r")
+#coord_file =open("/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/feather_dems/pomd.tfw","r")
 #coord_file = coord_file.read().split('\n')
 #coord_file = [float(i) for i in coord_file]
 #up_left_e = coord_file[4]
 #up_left_n = coord_file[5]
-#center_point = [[645391,4389698]]
-#For BRC
+#center_point = [[645392.5,4389696.5]]
+##For BRC
 #up_left_e = 645632.5
 #up_left_n = 4390104.5
-#center_point = [[645654.5,4390031]]
+#center_point = [[645656,4390029]]
 
 #For FTA
 up_left_e = 645616.5
@@ -35,15 +36,7 @@ for i in range(0,len(pits)):
     pits[i][0] = pits[i][0]-up_left_e
     pits[i][1] = (pits[i][1]-up_left_n)*-1
 pits = np.array(pits)
-    
 #print(pits)
-
-
-
-
-
-
-
 
 #Distance along the flowtube for the starting point
 start_width = 2.0
@@ -186,35 +179,7 @@ ft_center = ft_center[ft_center[:,3]>(min(pits[:,2])-1)]
 
       
 
-#Now need to get the width data from the flowtube
-#Retrace the flowtube from one boundary to the other
-#Start by running a flowtube from the coordinates of the starting point for boundary number 1
-#temp_width = plt.streamplot(xv,yv,-(gradx),grady,start_points=bdry1_start,linewidth=0.4,density=10).lines
-#temp_vertices = temp_width.get_segments()
-#temp_width = np.zeros((len(temp_vertices),4),dtype=np.float)
-#for i in range (1,len(temp_vertices)):
-#   temp_width[i][0] = np.sqrt((temp_vertices[i][0][0]-temp_vertices[i][1][0])**2+(temp_vertices[i][0][1]-temp_vertices[i][1][1])**2)+temp_width[i-1][0]
-#   temp_width[i][1] = (temp_vertices[i][0][0]+temp_vertices[i][1][0])/2
-#   temp_width[i][2] = (temp_vertices[i][0][1]+temp_vertices[i][1][1])/2
-#   if temp_vertices[i][0][0] == bdry1_start[0][0]:
-#        temp_index = i
-#temp_width = np.delete(temp_width,slice(0,temp_index),axis=0)       
-#
-##Now loop through to get the width at this point
-##Some temp variables for the loop
-#d_old = 100.0
-#d_new = 99.0
-#dist = 0.0
-#i = 0
-#while (d_new < d_old):
-#    d_old = d_new
-#    i = i+1
-#    dx = temp_width[i][1]-bdry2[0][1]
-#    dy = temp_width[i][2]-bdry2[0][2]
-#    d_new = np.sqrt((dx**2)+(dy**2))
-#    ddx = temp_width[i][1]-temp_width[i-1][1]
-#    ddy = temp_width[i][2]-temp_width[i-1][2]
-#    dist = dist + np.sqrt((ddx**2)+(ddy**2))
+
     
 
 
@@ -234,6 +199,9 @@ for i in range(0,len(ft_center)):
         flowtube[i][7] = bdry2[i][2]
         start_point = [[flowtube[i][4],flowtube[i][5]]]
 #Now begin a labourious loop to gather data
+#Need to get the width data from the flowtube
+#Retrace the flowtube from one boundary to the other
+#Start by running a flowtube from the coordinates of the starting point for boundary number 1
         temp_width = plt.streamplot(xv,yv,-(gradx),grady,start_points=start_point,linewidth=0.4,density=10).lines
         temp_vertices = temp_width.get_segments()
         temp_width = np.zeros((len(temp_vertices),4),dtype=np.float)
