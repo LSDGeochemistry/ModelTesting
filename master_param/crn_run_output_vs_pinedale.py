@@ -7,7 +7,7 @@ from scipy.interpolate import make_interp_spline, BSpline
 from matplotlib.axes._axes import _log as matplotlib_axes_logger
 matplotlib_axes_logger.setLevel('ERROR')
 #Set the root directory
-root = 'C:/Workspace/github/LSDMixingModel/Runs/pinedale/'
+root = '/exports/csce/datastore/geos/users/s0933963/github/LSDMixingModel/Runs/pinedale_test/'
 #set number of runs
 runs = (len(next(os.walk(root))[1]))
 print(runs)
@@ -33,21 +33,21 @@ for subdirs, dirs, files in os.walk(root):
         mean_be = groups.mean().be_conc.values
         be_std = groups.std().be_conc.values
         d_std = groups.std().d_loc.values
-        
-        
-        
-        
-        
-        
-        #Set the colourmap to colour by run number which corresponds to varying mixing velocity 
+
+
+
+
+
+
+        #Set the colourmap to colour by run number which corresponds to varying mixing velocity
         cm = np.full(len(mean_be),counter)
         cb = ax.scatter(mean_be,mean_d,s=20,c=cm,cmap=plt.cm.viridis)
         ax.errorbar(mean_be,mean_d,xerr=be_std,yerr=d_std, fmt='none')
         cb.set_clim(vmin=1,vmax=runs)
         counter+= 1
-        
+
 #Now load the initial data to test the model against
-initial_data = pd.read_csv('C:/Workspace/github/ModelTesting/master_param/pinedale/pinedale.csv', sep=",",skiprows=[0], names =['upp_d','low_d','be_conc','depth','d_err','be_err'])
+initial_data = pd.read_csv('/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/master_param/pinedale/pinedale.csv', sep=",",skiprows=[0], names =['upp_d','low_d','be_conc','depth','d_err','be_err'])
 #print(initial_data)
 be_conc = initial_data['be_conc'].values
 #Convert the values to be the same as the outputted data
@@ -64,8 +64,8 @@ ax.errorbar(be_conc,d_loc,xerr=be_err,yerr=d_err, fmt='none')
 
 #plt.plot(be_conc,d_loc,linewidth=1,c='k')
 
-ax.set_ylim(0,d)        
-plt.gca().invert_yaxis()    
+ax.set_ylim(0,d)
+plt.gca().invert_yaxis()
 axcb = plt.colorbar(cb)
 plt.show()
 #plt.savefig(root+'be_conc_depth_changing_mixing', dpi=100, bbox_inches='tight')

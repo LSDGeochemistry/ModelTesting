@@ -11,14 +11,14 @@ root=os.getcwd()
 n_runs = 5
 #Change the erosion rate or mixing velocity
 #Mixing Velocity limits
-min_vel = 0.0001
-max_vel = 0.0011
+min_vel = 0.0
+max_vel = 0.001
 #Erosion rate limits (not used here but can be turned on)
 min_e = 0.0
 max_e = 0.0
 #Create the arrays to populate
-steps = (max_vel-min_vel)/n_runs
-mix_vel =np.arange(min_vel,max_vel,steps)
+# steps = (max_vel-min_vel)/n_runs
+mix_vel =np.linspace(min_vel,max_vel,n_runs)
 #print(mix_vel)
 #steps = (max_e-min_e)/n_runs
 #e =np.arange(min_e,max_e,steps)
@@ -42,7 +42,7 @@ m_pd_fname = root + '/bull_lake/VolumeParticleData.in'
 #Here we loop through and create new folders containing the param files which can then be put into the mixing model. Currently the CRN and Model run param files are writted not copied allowing paramters to be varied in them
 
 for i in range(1,n_runs+1):
-    
+
     #Create a folder to populate then navigating to it plus giving it a helpful name.
     runname = '/bull_lake_' + 'mixing_' + str(mix_vel[i-1])
     #To get around decimal points in the file naming
@@ -51,8 +51,8 @@ for i in range(1,n_runs+1):
     #print(dirname)
     os.mkdir(dirname)
     os.chdir(dirname)
-    
-    r_CRN_fname = 'CRN_trans_param.CRNParam'
+
+    r_CRN_fname = 'CRN_trans_param.CRNparam'
     file = open('%s' % r_CRN_fname, 'w')
     file.write('start_depth: ' + str(1.5) + '\n')
     file.write('vert_mix_vel: ' + str(mix_vel[i-1]) + '\n')
@@ -80,11 +80,11 @@ for i in range(1,n_runs+1):
     file.write('site_elev: ' + str(2285) + '\n')
     file.write('Fsp: ' + str(0.98) + '\n')
     file.close
-    
-    
+
+
     r_ftd_fname = 'ft_details.param'
     shutil.copy(m_ftd_fname,r_ftd_fname)
-    
+
     r_mrn_fname = 'model_run.param'
     file = open('%s' % r_mrn_fname, 'w')
     file.write('flux_switch: ' + str(1) + '\n')
@@ -104,17 +104,16 @@ for i in range(1,n_runs+1):
     file.write('SS_flux: ' + str(0) + '\n')
     file.write('lower_boundary_condition: ' + str(1) + '\n')
     file.close
-    
-    
-    
+
+
+
     r_prf_fname = 'profile.sm'
     shutil.copy(m_prf_fname,r_prf_fname)
 
     r_st_fname = 'sed_trans_param.stparam'
     shutil.copy(m_st_fname,r_st_fname)
-    
+
     r_pd_fname ='VolumeParticleData.in'
     shutil.copy(m_pd_fname,r_pd_fname)
     #Change directory back to the root directory for start of new loop
     os.chdir(root)
-    

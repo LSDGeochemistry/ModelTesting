@@ -5,7 +5,8 @@ from scipy import interpolate
 
 ###Section containing user defined parameters
 #The pathway to the DEM
-fname = "/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/feather_dems/fta.bil"
+# fname = "/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/tv_dem/tv.bil"
+fname = "/exports/csce/datastore/geos/users/s0933963/feather_river_mixing_paper/matlab_script/tv_test.bil"
 #Open the DEM using GDAL
 dem = gdal.Open(fname)
 print('loaded dem')
@@ -25,25 +26,28 @@ print('loaded dem')
 #center_point = [[645656,4390029]]
 
 #For FTA
-up_left_e = 645616.5
-up_left_n = 4390063.5
-center_point = [[645635.5,4390046.5]]
-#Load the soil pit data and convert to the array coordinates
-#Change these accordingly
-pits = np.loadtxt("/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
+# up_left_e = 645616.5
+# up_left_n = 4390063.5
+# center_point = [[645635.5,4390046.5]]
+# #Load the soil pit data and convert to the array coordinates
+# #Change these accordingly
+# pits = np.loadtxt("/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
+# #Only do this for feather river DEM
+# for i in range(0,len(pits)):
+#     pits[i][0] = pits[i][0]-up_left_e
+#     pits[i][1] = (pits[i][1]-up_left_n)*-1
 
-for i in range(0,len(pits)):
-    pits[i][0] = pits[i][0]-up_left_e
-    pits[i][1] = (pits[i][1]-up_left_n)*-1
+# Only for the TV DEM
+pits = np.loadtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/tv_sites_updated.txt",delimiter=',',usecols=(0,1,3))
+center_point = [[60.0,70.0]]
+
 pits = np.array(pits)
 #print(pits)
 
 #Distance along the flowtube for the starting point
 start_width = 2.0
-#print(dem.GetMetadata)
-#Convert the raster
 raster = np.array(dem.GetRasterBand(1).ReadAsArray())
-####Add this in later when not dealing with LIDAR
+###Add this in later when not dealing with LIDAR
 #Intrpolate the raster for higher definition
 #Needs two variables, the resolution of the loaded raster and the desitreed resolution
 dem_r = 1
@@ -64,8 +68,8 @@ xv, yv = np.meshgrid(x, y)
 #Set the start point for the centerline on the grid Move this up to getting file?
 
 #convert the start point
-center_point[0][0] = center_point[0][0]-up_left_e
-center_point[0][1] = (center_point[0][1]-up_left_n)*-1
+# center_point[0][0] = center_point[0][0]-up_left_e
+# center_point[0][1] = (center_point[0][1]-up_left_n)*-1
 
 print(center_point)
 #Now find the centerline
@@ -104,20 +108,20 @@ for i in range (1,len(contour_1_vertices)):
    #find the closest indext for the x value
    if contour_1_vertices[i][0][0] == center_point[0][0]:
         center_index_x = i
-#Now move along the flowtube contour to the prescribed distance along to get the values within the max starting width defined earlier        
+#Now move along the flowtube contour to the prescribed distance along to get the values within the max starting width defined earlier
 for i in range (center_index_x,len(contour_1_data)):
         print('found')
         bdry1_width = []
         for j in range (0,(len(contour_1_data)-i-1)):
             if contour_1_data[j+i][0]-contour_1_data[i][0] <= start_width:
                     bdry1_width.append(contour_1_data[i+j])
-                   
+
         break
-#The start point for this boundary is taken from the final row of values from the bdry1_width list       
+#The start point for this boundary is taken from the final row of values from the bdry1_width list
 bdry1_start = [[bdry1_width[len(bdry1_width)-1][1],bdry1_width[len(bdry1_width)-1][2]]]
 #Print the x y coordinates of this point to make sure they're reasonable
 print(bdry1_start)
-#Now feed these boundary points into the streamplot fucntion to get the flowtube                    
+#Now feed these boundary points into the streamplot fucntion to get the flowtube
 boundary_1_line = plt.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10).lines
 boundary_1_vertices = boundary_1_line.get_segments()
 bdry1 = np.zeros((len(boundary_1_vertices),4),dtype=np.float)
@@ -128,7 +132,7 @@ for i in range (1,len(boundary_1_vertices)):
    if boundary_1_vertices[i][0][0] == bdry1_start[0][0]:
         boundary_index_1 = i
 ###############################################################
-        
+
 #########Right most boundary###################################
 contour_2 = plt.streamplot(xv,yv,-(grady),gradx,start_points=center_point,linewidth=0.4,density=10).lines
 contour_2_vertices = contour_2.get_segments()
@@ -141,20 +145,20 @@ for i in range (1,len(contour_1_vertices)):
    #find the closest indext for the x value
    if contour_2_vertices[i][0][0] == center_point[0][0]:
         center_index_x = i
-#Now move along the flowtube contour to the prescribed distance along to get the values within the max starting width defined earlier        
+#Now move along the flowtube contour to the prescribed distance along to get the values within the max starting width defined earlier
 for i in range (center_index_x,len(contour_2_data)):
         print('found')
         bdry2_width = []
         for j in range (0,(len(contour_2_data)-i-1)):
             if contour_2_data[j+i][0]-contour_2_data[i][0] <= start_width:
                     bdry2_width.append(contour_2_data[i+j])
-                   
+
         break
-#The start point for this boundary is taken from the final row of values from the bdry1_width list       
+#The start point for this boundary is taken from the final row of values from the bdry1_width list
 bdry2_start = [[bdry2_width[len(bdry2_width)-1][1],bdry2_width[len(bdry2_width)-1][2]]]
 #Print the x y coordinates of this point to make sure they're reasonable
 print(bdry2_start)
-#Now feed these boundary points into the streamplot fucntion to get the flowtube                    
+#Now feed these boundary points into the streamplot fucntion to get the flowtube
 boundary_2_line = plt.streamplot(xv,yv,gradx,grady,start_points=bdry2_start,linewidth=0.4,density=10).lines
 boundary_2_vertices = boundary_2_line.get_segments()
 
@@ -173,15 +177,6 @@ bdry1 = np.delete(bdry1,slice(0,boundary_index_1-1),axis=0)
 bdry2 = np.delete(bdry2,slice(0,boundary_index_2-1),axis=0)
 #Fix it so the bottom of the flowtube is just past the last pit, removes some hassle of manual changing of length etc
 ft_center = ft_center[ft_center[:,3]>(min(pits[:,2])-1)]
-
-
-        
-
-      
-
-
-    
-
 
 #Loop through now finding the width at every point along with the area.
 #First create an array to accomodate this infromation
@@ -211,7 +206,7 @@ for i in range(0,len(ft_center)):
            temp_width[k][2] = (temp_vertices[k][0][1]+temp_vertices[k][1][1])/2
            if temp_vertices[k][0][0] == start_point[0][0]:
                 temp_index = k
-        temp_width = np.delete(temp_width,slice(0,temp_index-1),axis=0)       
+        temp_width = np.delete(temp_width,slice(0,temp_index-1),axis=0)
 
         #Now loop through to get the width at this point
         #Some temp variables for the loop
@@ -249,9 +244,9 @@ for i in range(0,len(ft_center)):
             dxq = flowtube[i-1][4]-flowtube[i][1]
             dyq = flowtube[i-1][5]-flowtube[i][2]
             q = np.sqrt(dxq**2+dyq**2)
-            
+
             quad_A1 = 0.25*np.sqrt(4*p*p*q*q-(b*b+d*d-a*a-c*c)*(b*b+d*d-a*a-c*c))
-            
+
             dxa = flowtube[i-1][6]-flowtube[i-1][1]
             dya = flowtube[i-1][7]-flowtube[i-1][2]
             a = np.sqrt(dxa**2+dya**2)
@@ -270,14 +265,14 @@ for i in range(0,len(ft_center)):
             dxq = flowtube[i-1][6]-flowtube[i][1]
             dyq = flowtube[i-1][7]-flowtube[i][2]
             q = np.sqrt(dxq**2+dyq**2)
-            
+
             quad_A2 =0.25*np.sqrt(4*p*p*q*q-(b*b+d*d-a*a-c*c)*(b*b+d*d-a*a-c*c))
-            
+
             flowtube[i][9] = quad_A1+quad_A2
-           
-        
+
+
 #print(flowtube)
-np.savetxt("fta_flowtube_details.csv", flowtube, delimiter=",",header='distance,center_x,center_y,center_z,bdry1_x,bdry1_y,brdy2_x,brdy2_y,width,area_quad,area_other')
+np.savetxt("tv_flowtube_details.csv", flowtube, delimiter=",",header='distance,center_x,center_y,center_z,bdry1_x,bdry1_y,brdy2_x,brdy2_y,width,area_quad,area_other')
 
 
 
@@ -289,24 +284,39 @@ np.savetxt("fta_flowtube_details.csv", flowtube, delimiter=",",header='distance,
 ###Plot the figure
 fig = plt.figure()
 ax=fig.add_subplot(1,1,1)
-ax.matshow(raster)
+im = ax.matshow(raster,cmap=plt.get_cmap('viridis'))
+plt.colorbar(im, ax=ax)
+
+# ax.matshow(raster,vmin=45,vmax=80)
 ax.streamplot(xv,yv,gradx,grady,start_points=center_point,linewidth=0.4,density=10)
 ax.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10)
 ax.streamplot(xv,yv,gradx,grady,start_points=bdry2_start,linewidth=0.4,density=10)
 
-#print(pits[:,0])
+
 ax.scatter(pits[:,0],pits[:,1])
+# This is a debugging part, run if the flowtube parser isn't working and you think the elevations maybe causing the problem
+# for i in range(0,len(pits)):
+#     # print(i)
+#     x_temp=int(pits[i,0])
+#     y_temp=int(pits[i,1])
+#     # print(x_temp)
+#     # print(y_temp)
+#     print(raster[x_temp,y_temp])
 #ax.set_xlim(60,130)
 #ax.set_ylim(0,90)
 
-
+xtick=np.arange(min(x),max(x),5)
+ytick=np.arange(min(y),max(y),5)
+ax.set_xticks(xtick)
+ax.set_yticks(ytick)
+ax.grid()
 
 
 
 #plt.savefig('test.png')
 #plt.matshow(raster)
 
-plt.savefig('fta_test.png')
+plt.savefig('tv_test.png')
 plt.close()
 
 

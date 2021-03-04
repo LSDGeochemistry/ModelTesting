@@ -42,7 +42,7 @@ m_pd_fname = root + '/pinedale/VolumeParticleData.in'
 #Here we loop through and create new folders containing the param files which can then be put into the mixing model. Currently the CRN and Model run param files are writted not copied allowing paramters to be varied in them
 
 for i in range(1,n_runs+1):
-    
+
     #Create a folder to populate then navigating to it plus giving it a helpful name.
     runname = '/pinedale_' + 'mixing_' + str(mix_vel[i-1])
     #To get around decimal points in the file naming
@@ -51,8 +51,8 @@ for i in range(1,n_runs+1):
     #print(dirname)
     os.mkdir(dirname)
     os.chdir(dirname)
-    
-    r_CRN_fname = 'CRN_trans_param.CRNParam'
+
+    r_CRN_fname = 'CRN_trans_param.CRNparam'
     file = open('%s' % r_CRN_fname, 'w')
     file.write('start_depth: ' + str(1.4) + '\n')
     file.write('vert_mix_vel: ' + str(mix_vel[i-1]) + '\n')
@@ -61,7 +61,7 @@ for i in range(1,n_runs+1):
     file.write('part_conc: ' + str(0.5) + '\n')
     file.write('CRN_muon_param_switch: ' + str(2) + '\n')
     file.write('single_scaling: ' + str(5.5) + '\n')
-    file.write('C_10Be_initia: ' + str(20000.0) + '\n')
+    file.write('C_10Be_initial: ' + str(20000.0) + '\n')
     file.write('C_f10Be_initial: ' + str(0.0) + '\n')
     file.write('C_26Al_initial: ' + str(0.0) + '\n')
     file.write('C_36Cl_initial: ' + str(0.0) + '\n')
@@ -80,11 +80,11 @@ for i in range(1,n_runs+1):
     file.write('site_elev: ' + str(2298) + '\n')
     file.write('Fsp: ' + str(0.98) + '\n')
     file.close
-    
-    
+
+
     r_ftd_fname = 'ft_details.param'
     shutil.copy(m_ftd_fname,r_ftd_fname)
-    
+
     r_mrn_fname = 'model_run.param'
     file = open('%s' % r_mrn_fname, 'w')
     file.write('flux_switch: ' + str(1) + '\n')
@@ -104,17 +104,16 @@ for i in range(1,n_runs+1):
     file.write('SS_flux: ' + str(0) + '\n')
     file.write('lower_boundary_condition: ' + str(1) + '\n')
     file.close
-    
-    
-    
+
+
+
     r_prf_fname = 'profile.sm'
     shutil.copy(m_prf_fname,r_prf_fname)
 
     r_st_fname = 'sed_trans_param.stparam'
     shutil.copy(m_st_fname,r_st_fname)
-    
+
     r_pd_fname ='VolumeParticleData.in'
     shutil.copy(m_pd_fname,r_pd_fname)
     #Change directory back to the root directory for start of new loop
     os.chdir(root)
-    
