@@ -2,11 +2,12 @@ import numpy as np
 import pandas as pd
 
 #Read the flowtube file
-flowtube_file = np.genfromtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/fta_flowtube_details.csv", delimiter =',', skip_header=0, names=['distance','center_x','center_y','center_z','bdry1_x','bdry1_y','brdy2_x','brdy2_y','width','area_quad','area_other'] )
-print('loaded')
+flowtube_file = np.genfromtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/fta_flowtube_details_test.csv", delimiter =',', skip_header=0, names=['distance','center_x','center_y','center_z','bdry1_x','bdry1_y','brdy2_x','brdy2_y','width','area_quad','area_other'] )
+# print('loaded')
+# print(flowtube_file)
 #Read the pit data file
 #pit_data = np.loadtxt("/Users/louis/Documents/GitHub/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
-pit_data = np.loadtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows,usecols=(0,1,3))
+pit_data = np.loadtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
 #pit_data = np.loadtxt("/Users/louis/Documents/GitHub/ModelTesting/flowtube_testing/pomd_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
 #Sort the pit data file with highest elevation first
 pit_data[::-1].sort(axis=0)
@@ -40,7 +41,7 @@ for i in range(1,len(flowtube_file)):
         flowtube[bin_counter][2] = flowtube[bin_counter][2]+(flowtube_file[i]['area_quad'])
         #Record the elevation
         flowtube[bin_counter][3] = flowtube_file[i]['center_z']
-        # print(i)
+        print(i)
 #        ###What to do about interp h?
 #       print('done')
 
@@ -52,7 +53,7 @@ for i in range(1,len(flowtube_file)):
         flowtube[bin_counter+1][2] = flowtube[bin_counter+1][2]+(flowtube_file[i]['area_quad'])
         #Record the elevation
         flowtube[bin_counter+1][3] = flowtube_file[i]['center_z']
-        # print(i)
+        print(i)
 #        print('meesa done master anakin')
     elif pit_counter+2 <= n_pits:
          pit_counter = pit_counter+1
@@ -64,23 +65,12 @@ for i in range(1,len(flowtube_file)):
          flowtube[bin_counter][2] = flowtube[bin_counter][2]+(flowtube_file[i]['area_quad'])
         #Record the elevation
          flowtube[bin_counter][3] = flowtube_file[i]['center_z']
-         # print(i)
+         print(i)
 
 
 
-         print(pit_counter)
+#         print(pit_counter)
 #         print(bin_counter)
 
 
-np.savetxt("fta_flowtube_file_test.csv", flowtube, delimiter=" ",header='ds_dist,width,Area,elev,interp_h')
-
-
-
-
-
-
-
-
-
-
-
+np.savetxt("fta_flowtube_file_test.csv", flowtube, delimiter=",",header='ds_dist,width,Area,elev,interp_h')

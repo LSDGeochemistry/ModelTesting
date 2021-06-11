@@ -8,11 +8,11 @@ from decimal import Decimal
 #This assumes that the directory maker sits in a folder one up from the one containing the master param files
 root=os.getcwd()
 #Specify number of runs
-n_runs = 5
+n_runs = 6
 #Change the erosion rate or mixing velocity
 #Mixing Velocity limits
 min_vel = 0.0
-max_vel = 0.005
+max_vel = 0.006
 #Erosion rate limits
 min_e = 0.0
 max_e = 0.0
@@ -75,8 +75,8 @@ for i in range(1,n_runs+1):
     file.write('chi_f10Be: ' + str(0.7) + '\n')
     file.write('n_PDZ_intervals: ' + str(5) + '\n')
     file.write('n_CAZ_intervals: ' + str(10) + '\n')
-    file.write('lat: ' + str(43) + '\n')
-    file.write('lon: ' + str(110) + '\n')
+    file.write('lat: ' + str(42) + '\n')
+    file.write('lon: ' + str(109) + '\n')
     file.write('site_elev: ' + str(2298) + '\n')
     file.write('Fsp: ' + str(0.98) + '\n')
     file.close
@@ -88,12 +88,12 @@ for i in range(1,n_runs+1):
     r_mrn_fname = 'model_run.param'
     file = open('%s' % r_mrn_fname, 'w')
     file.write('flux_switch: ' + str(1) + '\n')
-    file.write('prod_switch: ' + str(2) + '\n')
+    file.write('prod_switch: ' + str(3) + '\n')
     file.write('flux_us: ' + str(0) + '\n')
     file.write('dt: ' + str(10) + '\n')
     file.write('CRN_switch: ' + str(3) + '\n')
     file.write('end_time: ' + str(19000) + '\n')
-    file.write('surf_erate: -' + str(0.000003) + '\n')
+    file.write('surf_erate: -' + str(0.0000025) + '\n')
     file.write('particle_printing_interval: ' + str(19000) + '\n')
     file.write('eroded_catch_window: ' + str(500) + '\n')
     file.write('max_age: ' + str(19000) + '\n')

@@ -5,8 +5,8 @@ from scipy import interpolate
 
 ###Section containing user defined parameters
 #The pathway to the DEM
-# fname = "/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/tv_dem/tv.bil"
-fname = "/exports/csce/datastore/geos/users/s0933963/feather_river_mixing_paper/matlab_script/tv_test.bil"
+fname = "/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/feather_dems/fta.bil"
+# fname = "/exports/csce/datastore/geos/users/s0933963/feather_river_mixing_paper/matlab_script/tv_test.bil"
 #Open the DEM using GDAL
 dem = gdal.Open(fname)
 print('loaded dem')
@@ -26,20 +26,20 @@ print('loaded dem')
 #center_point = [[645656,4390029]]
 
 #For FTA
-# up_left_e = 645616.5
-# up_left_n = 4390063.5
-# center_point = [[645635.5,4390046.5]]
-# #Load the soil pit data and convert to the array coordinates
-# #Change these accordingly
-# pits = np.loadtxt("/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
-# #Only do this for feather river DEM
-# for i in range(0,len(pits)):
-#     pits[i][0] = pits[i][0]-up_left_e
-#     pits[i][1] = (pits[i][1]-up_left_n)*-1
+up_left_e = 645616.5
+up_left_n = 4390063.5
+center_point = [[645635.5,4390046.5]]
+#Load the soil pit data and convert to the array coordinates
+#Change these accordingly
+pits = np.loadtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
+#Only do this for feather river DEM
+for i in range(0,len(pits)):
+    pits[i][0] = pits[i][0]-up_left_e
+    pits[i][1] = (pits[i][1]-up_left_n)*-1
 
 # Only for the TV DEM
-pits = np.loadtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/tv_sites_updated.txt",delimiter=',',usecols=(0,1,3))
-center_point = [[60.0,70.0]]
+# pits = np.loadtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/tv_sites_updated.txt",delimiter=',',usecols=(0,1,3))
+# center_point = [[60.0,70.0]]
 
 pits = np.array(pits)
 #print(pits)
@@ -68,8 +68,8 @@ xv, yv = np.meshgrid(x, y)
 #Set the start point for the centerline on the grid Move this up to getting file?
 
 #convert the start point
-# center_point[0][0] = center_point[0][0]-up_left_e
-# center_point[0][1] = (center_point[0][1]-up_left_n)*-1
+center_point[0][0] = center_point[0][0]-up_left_e
+center_point[0][1] = (center_point[0][1]-up_left_n)*-1
 
 print(center_point)
 #Now find the centerline
@@ -272,7 +272,7 @@ for i in range(0,len(ft_center)):
 
 
 #print(flowtube)
-np.savetxt("tv_flowtube_details.csv", flowtube, delimiter=",",header='distance,center_x,center_y,center_z,bdry1_x,bdry1_y,brdy2_x,brdy2_y,width,area_quad,area_other')
+np.savetxt("fta_flowtube_details_test.csv", flowtube, delimiter=",",header='distance,center_x,center_y,center_z,bdry1_x,bdry1_y,brdy2_x,brdy2_y,width,area_quad,area_other')
 
 
 
@@ -316,7 +316,7 @@ ax.grid()
 #plt.savefig('test.png')
 #plt.matshow(raster)
 
-plt.savefig('tv_test.png')
+plt.savefig('fta_test.png')
 plt.close()
 
 

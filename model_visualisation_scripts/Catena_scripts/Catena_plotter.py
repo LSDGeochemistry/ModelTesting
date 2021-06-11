@@ -3,10 +3,11 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import make_interp_spline, BSpline
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/mixing_0_0001/'
-DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/mixing_0_0001_erosion_0_001/'
+# DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/mixing_0_0001_erosion_0_001/'
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/no_mixing/'
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/flux_tests/no_mixing_erosion_0_001/'
-
+# DataDirectory = '/exports/csce/datastore/geos/users/s0933963/github/LSDMixingModel/Runs/catenas_no_mixing/steep/'
+DataDirectory = '/exports/csce/datastore/geos/users/s0933963/github/LSDMixingModel/Runs/fta/fta_mixing_0_0/'
 
 #Load the relevant data
 hillslope = pd.read_csv(DataDirectory+'ft_properties.out', sep=" ",header=0,comment='-')
@@ -38,9 +39,14 @@ hillslope_line = np.linspace(h_min,h_max,100)
 hl_arr =np.array(hillslope['s'])
 z_arr = np.array(zeta.iloc[0])
 e_arr = np.array(eta.iloc[0])
-#Make the lines
-z_spl=make_interp_spline(hl_arr,z_arr,k=3)
-e_spl=make_interp_spline(hl_arr,e_arr,k=3)
+#Make the lines If statemtn deals with both cubic and quadratic depending on number of points
+if len(hl_arr)>3:
+    z_spl=make_interp_spline(hl_arr,z_arr,k=1)
+    e_spl=make_interp_spline(hl_arr,e_arr,k=1)
+else:
+    z_spl=make_interp_spline(hl_arr,z_arr,k=2)
+    e_spl=make_interp_spline(hl_arr,e_arr,k=2)
+
 zeta_smooth = z_spl(hillslope_line)
 eta_smooth = e_spl(hillslope_line)
 #Plot the lines
