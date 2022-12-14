@@ -22,9 +22,9 @@ d = max(d_loc)
 #Depth profile for testing
 z = np.arange(0,d,0.01)
 #density of material (g/cm^3)
-rho = 1.8
+rho = 1.325
 #density of quartz (g/cm^3)
-rho_q =2.2
+rho_q =2.65
 #Decay Constant
 gamma = 500*np.power(10.0,-9) 
 #attenuation lenth (g/cm^2)

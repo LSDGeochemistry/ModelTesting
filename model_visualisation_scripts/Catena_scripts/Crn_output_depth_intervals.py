@@ -10,11 +10,11 @@ from glob import glob
 #DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/mixing_0_0001/'
 # DataDirectory =  'C:/Workspace/github/LSDMixingModel/Runs/steep_slope/mixing_0_0001_erosion_0_001/'
 # DataDirectory = '/exports/csce/datastore/geos/users/s0933963/github/LSDMixingModel/Runs/catenas_no_mixing/steep/'
-DataDirectory = '/exports/csce/datastore/geos/users/s0933963/github/LSDMixingModel/Runs/idealised_catena_runs/heavy_mixing/'
+DataDirectory = '/exports/csce/datastore/geos/users/s0933963/github/LSDMixingModel/Runs/idealised_catena_runs/changing_erate/heavy_mixing/'
 #Number of profiles (bins), should rip this straight from model output for simplicity!!!
 # Do the flat section
 print('This is the input file directory: '+DataDirectory)
-bins = pd.read_csv(DataDirectory+'/flat/p_trans_out.pout', sep=" ",names=['time', 'bn', 'pid','z_loc','s_loc','d_loc','buff','page','osl','be_conc','fallout_be_conc','c_conc','ne_conc'] )
+bins = pd.read_csv(DataDirectory+'flat/p_trans_out.pout', sep=" ",names=['time', 'bn', 'pid','z_loc','s_loc','d_loc','buff','page','osl','be_conc','fallout_be_conc','c_conc','ne_conc'] )
 print('loaded the particle file')
 n_bins = max(bins['bn'])+1
 print('The number of bins is:'+str(n_bins))

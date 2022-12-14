@@ -7,7 +7,7 @@ from matplotlib.axes._axes import _log as matplotlib_axes_logger
 matplotlib_axes_logger.setLevel('ERROR')
 
 #Set the root directory
-root = '/exports/csce/datastore/geos/users/s0933963/github/LSDMixingModel/Runs/bull_lake_72/'
+root = '/exports/csce/datastore/geos/users/s0933963/github/LSDMixingModel/Runs/bull_lake_65/'
 #set number of runs
 runs = (len(next(os.walk(root))[1]))
 print(runs)

@@ -3,7 +3,7 @@ vert_mix_vel: 0.0
 horiz_mix_vel: 0.0
 Omega: 1.0
 part_conc: 0.5
-CRN_muon_param_switch: 1
+CRN_muon_param_switch: 2
 single_scaling: 5.5
 C_10Be_initial: 0.0
 C_26Al_initial: 0.0

@@ -2,7 +2,7 @@ flux_switch: 1
 prod_switch: 2
 flux_us: 0.0
 dt: 10
-CRN_switch: 2
+CRN_switch: 3
 end_time: 1000
 surf_erate: 0
 particle_printing_interval: 1000

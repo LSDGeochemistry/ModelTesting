@@ -2,10 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from osgeo import gdal
 from scipy import interpolate
+import matplotlib.cbook as cbook
+from matplotlib_scalebar.scalebar import ScaleBar
+
 
 ###Section containing user defined parameters
 #The pathway to the DEM
-fname = "/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/feather_dems/fta.bil"
+fname = "/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/feather_dems/pomd.tif"
 # fname = "/exports/csce/datastore/geos/users/s0933963/feather_river_mixing_paper/matlab_script/tv_test.bil"
 #Open the DEM using GDAL
 dem = gdal.Open(fname)
@@ -13,25 +16,25 @@ print('loaded dem')
 #Read in the coordinates, needs changed for whatever files being rea
 ###Depends on the file format
 #For POMD
-#coord_file = open("R:/feather_river_mixing_paper/dem/pomd_out.tfw","r")
-#coord_file =open("/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/feather_dems/pomd.tfw","r")
-#coord_file = coord_file.read().split('\n')
-#coord_file = [float(i) for i in coord_file]
-#up_left_e = coord_file[4]
-#up_left_n = coord_file[5]
-#center_point = [[645392.5,4389696.5]]
-##For BRC
-#up_left_e = 645632.5
-#up_left_n = 4390104.5
-#center_point = [[645656,4390029]]
+coord_file = open("/exports/csce/datastore/geos/users/s0933963/feather_river_mixing_paper/dem/pomd_out.tfw","r")
+# coord_file =open("/Users/louis/Documents/GitHub//ModelTesting/flowtube_testing/feather_dems/pomd.tfw","r")
+coord_file = coord_file.read().split('\n')
+coord_file = [float(i) for i in coord_file]
+up_left_e = coord_file[4]
+up_left_n = coord_file[5]
+center_point = [[645392.5,4389696.5]]
+# For BRC
+# up_left_e = 645632.5
+# up_left_n = 4390104.5
+# center_point = [[645656,4390029]]
 
 #For FTA
-up_left_e = 645616.5
-up_left_n = 4390063.5
-center_point = [[645635.5,4390046.5]]
+# up_left_e = 645616.5
+# up_left_n = 4390063.5
+# center_point = [[645635.5,4390046.5]]
 #Load the soil pit data and convert to the array coordinates
 #Change these accordingly
-pits = np.loadtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/fta_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
+pits = np.loadtxt("/exports/csce/datastore/geos/users/s0933963/github/ModelTesting/flowtube_testing/pomd_sites.txt",delimiter=',',skiprows=1,usecols=(0,1,3))
 #Only do this for feather river DEM
 for i in range(0,len(pits)):
     pits[i][0] = pits[i][0]-up_left_e
@@ -45,7 +48,7 @@ pits = np.array(pits)
 #print(pits)
 
 #Distance along the flowtube for the starting point
-start_width = 2.0
+start_width = 3.5
 raster = np.array(dem.GetRasterBand(1).ReadAsArray())
 ###Add this in later when not dealing with LIDAR
 #Intrpolate the raster for higher definition
@@ -175,6 +178,7 @@ for i in range (1,len(boundary_2_vertices)):
 ft_center = np.delete(ft_center,slice(0,center_index-1),axis=0)
 bdry1 = np.delete(bdry1,slice(0,boundary_index_1-1),axis=0)
 bdry2 = np.delete(bdry2,slice(0,boundary_index_2-1),axis=0)
+# THIS IS WHERE IT CAN THROW AN ERORR EASILY SO CHANGE THE FINAL NUMBER ACCORDINLGY TO MAKE WORK
 #Fix it so the bottom of the flowtube is just past the last pit, removes some hassle of manual changing of length etc
 ft_center = ft_center[ft_center[:,3]>(min(pits[:,2])-1)]
 
@@ -272,7 +276,7 @@ for i in range(0,len(ft_center)):
 
 
 #print(flowtube)
-np.savetxt("fta_flowtube_details_test.csv", flowtube, delimiter=",",header='distance,center_x,center_y,center_z,bdry1_x,bdry1_y,brdy2_x,brdy2_y,width,area_quad,area_other')
+np.savetxt("pomd_flowtube_details_new.csv", flowtube, delimiter=",",header='distance,center_x,center_y,center_z,bdry1_x,bdry1_y,brdy2_x,brdy2_y,width,area_quad,area_other')
 
 
 
@@ -281,44 +285,55 @@ np.savetxt("fta_flowtube_details_test.csv", flowtube, delimiter=",",header='dist
 
 
 
-###Plot the figure
-fig = plt.figure()
-ax=fig.add_subplot(1,1,1)
-im = ax.matshow(raster,cmap=plt.get_cmap('viridis'))
-plt.colorbar(im, ax=ax)
+# ###Plot the figure
+# fig = plt.figure()
+# ax=fig.add_subplot(1,1,1)
+# im = ax.matshow(raster,cmap=plt.get_cmap('viridis'))
+# scalebar = ScaleBar(1.0)
 
-# ax.matshow(raster,vmin=45,vmax=80)
-ax.streamplot(xv,yv,gradx,grady,start_points=center_point,linewidth=0.4,density=10)
-ax.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10)
-ax.streamplot(xv,yv,gradx,grady,start_points=bdry2_start,linewidth=0.4,density=10)
-
-
-ax.scatter(pits[:,0],pits[:,1])
-# This is a debugging part, run if the flowtube parser isn't working and you think the elevations maybe causing the problem
-# for i in range(0,len(pits)):
-#     # print(i)
-#     x_temp=int(pits[i,0])
-#     y_temp=int(pits[i,1])
-#     # print(x_temp)
-#     # print(y_temp)
-#     print(raster[x_temp,y_temp])
-#ax.set_xlim(60,130)
-#ax.set_ylim(0,90)
-
-xtick=np.arange(min(x),max(x),5)
-ytick=np.arange(min(y),max(y),5)
-ax.set_xticks(xtick)
-ax.set_yticks(ytick)
-ax.grid()
+# plt.gca().add_artist(scalebar)
+# axcb = plt.colorbar(im, ax=ax)
+# im.set_clim(760,790)
+# axcb.ax.set_ylabel('Elevation (m)',fontsize=12)
 
 
-
-#plt.savefig('test.png')
-#plt.matshow(raster)
-
-plt.savefig('fta_test.png')
-plt.close()
+# # ax.matshow(raster,vmin=45,vmax=80)
+# ax.streamplot(xv,yv,gradx,grady,start_points=center_point,linewidth=0.4,density=10,color='black')
+# ax.streamplot(xv,yv,gradx,grady,start_points=bdry1_start,linewidth=0.4,density=10,color='black')
+# ax.streamplot(xv,yv,gradx,grady,start_points=bdry2_start,linewidth=0.4,density=10,color='black')
 
 
+# ax.scatter(pits[:,0],pits[:,1])
+# # This is a debugging part, run if the flowtube parser isn't working and you think the elevations maybe causing the problem
+# # for i in range(0,len(pits)):
+# #     # print(i)
+# #     x_temp=int(pits[i,0])
+# #     y_temp=int(pits[i,1])
+# #     # print(x_temp)
+# #     # print(y_temp)
+# #     print(raster[x_temp,y_temp])
+# ax.set_xlim(70,110)
+# ax.set_ylim(80,40)
 
-print('done')
+# # xtick=np.arange(min(x),max(x),5)
+# # ytick=np.arange(min(y),max(y),5)
+# # ax.set_xticks(xtick)
+# # ax.set_yticks(ytick)
+# # ax.set_xlim(min(x),max(x)-1)
+# # ax.set_ylim(max(y)-1,min(y))
+# ax.set_title('POMD Flowtube')
+# ax.set_xticklabels([])
+# ax.set_yticklabels([])
+# ax.set_xticks([])
+# ax.set_yticks([])
+
+
+# #plt.savefig('test.png')
+# #plt.matshow(raster)
+
+# plt.savefig('pomd_flowtube.png')
+# plt.close()
+
+
+
+# print('done')
